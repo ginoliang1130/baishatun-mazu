@@ -56,9 +56,19 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 推到 `main` branch 自動觸發 GitHub Actions（`.github/workflows/deploy-pages.yml`）：
 
 1. `sed` 將 `app.js` 裡的 `__GOOGLE_MAPS_EMBED_API_KEY__` 替換成 GitHub Secret
-2. 產出的 `dist/` 部署到 GitHub Pages
+2. Python 將 `app.js` 裡的 `` `__FIREBASE_CONFIG__` `` 替換成 GitHub Secret（JSON 含雙引號，用 backtick 字串 + Python 注入避免 sed 語法問題）
+3. 產出的 `dist/` 部署到 GitHub Pages
 
 **不要把 API key 直接寫進 source code。** key 只存在 GitHub Secret，由 CI 注入。
+
+## Firebase
+
+- 專案：`baishatun-mazu-69a3f`，asia-southeast1
+- SDK：compat 9.23.0 via CDN（`firebase-app-compat.js` + `firebase-database-compat.js`）
+- Database Rules：`locations/` 下僅允許 14 位團員 id 寫入（明確 allowlist），`.read: true`
+  - member id = `memberIdFromName(name)`，空格換底線，例如 `Tina 媽` → `Tina_媽`
+  - 若更改成員名單，需同步更新 Firebase Console 的 Database Rules
+- 定位追蹤在 `2026-04-12T00:00:00+08:00` 前顯示「即將開放」，不啟動 Firebase 連線
 
 ## Google Maps Embed
 
@@ -95,6 +105,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
   - Firebase compat SDK 9.23.0 via CDN；`FIREBASE_CONFIG` GitHub Secret 由 Python 注入（解決 sed 無法處理 JSON 引號問題）
 - **修正** `deploy-pages.yml`：`FIREBASE_CONFIG` 改用 Python 替換，sed 只處理 Google Maps key；`FIREBASE_CONFIG_STR` 改用 backtick 字串，避免 JSON 雙引號破壞 JS 語法
 - **新增** `isTrackerEnabled()`：定位追蹤功能在 4/12 00:00 (UTC+8) 前顯示「即將開放」，不顯示 overlay 也不啟動 Firebase
+- **資安** Firebase Database Rules 改為 14 位團員 id 明確 allowlist（`locations/佛祖球球`、`locations/Tina_媽` 等），拒絕任意 node 寫入
 - **修正** strategy 文字換行：渲染時將 `\n` 轉為 `<br>` 讓排版正確顯示
 - **修正** 去程策略文字移除「深夜趕路」（全團統一行動，無深夜趕路）
 - **修正** `renderAttendanceCell` 未使用的 `member` 參數改為 `_member`
