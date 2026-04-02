@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026 白沙屯媽祖進香任務地圖</title>
+    <meta
+      name="description"
+      content="2026 白沙屯媽祖往北港進香任務地圖，整合走路策略、住宿補給點、互動地圖與團員出席表。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Cormorant+Garamond:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">2026 04/12 - 04/20</p>
+          <h1>白沙屯媽祖進香任務地圖</h1>
+          <p class="hero-text">
+            給走在香燈腳隊伍裡的自己人。把前三天衝刺節奏、每日住宿補給點、北港關鍵目標與團員行程，一次收進手機裡。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#day-planner">看每日任務</a>
+            <a class="secondary-action" href="#route-map">打開任務地圖</a>
+          </div>
+        </div>
+        <div class="hero-stat-board" id="strategy-board"></div>
+      </header>
+
+      <main class="content-grid">
+        <section class="card map-card" id="route-map-section">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Mission Map</p>
+              <h2 id="route-map">任務地圖</h2>
+            </div>
+            <p class="section-note">點地標可直接導航，首次載入會嘗試依地址定位。</p>
+          </div>
+          <div id="map"></div>
+          <div class="map-legend" id="map-legend"></div>
+        </section>
+
+        <section class="card strategy-card">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Strategy</p>
+              <h2>走路策略</h2>
+            </div>
+          </div>
+          <div class="strategy-callout">
+            <strong>任務核心：</strong>
+            凌晨要比媽祖更早抵達北辰派出所，前三天每一天都要把里程推到 43K。
+          </div>
+          <div class="distance-plan" id="distance-plan"></div>
+          <div class="segment-list" id="segment-list"></div>
+        </section>
+
+        <section class="card planner-card" id="day-planner">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Daily Planner</p>
+              <h2>行程檢視器</h2>
+            </div>
+            <p class="section-note">切換日期查看住宿、7-11、自助洗衣與任務提醒。</p>
+          </div>
+          <div class="tabs" id="day-tabs"></div>
+          <div id="day-panel"></div>
+        </section>
+
+        <section class="card attendance-card">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Crew Status</p>
+              <h2>團員出席表</h2>
+            </div>
+            <p class="section-note">以原始勾選紀錄轉為表格，方便快速確認誰在哪一天同行。</p>
+          </div>
+          <div class="table-wrap">
+            <table id="attendance-table"></table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
