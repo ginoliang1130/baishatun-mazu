@@ -559,6 +559,7 @@ async function fetchDayWeather(dayId, lat, lng, dateISO) {
     const res = await fetch(url);
     if (!res.ok) throw new Error();
     const data = await res.json();
+    if (data.error) throw new Error();
     const daily = data.daily;
     const idx = daily.time.indexOf(dateISO);
     if (idx === -1) throw new Error();

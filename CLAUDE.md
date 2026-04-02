@@ -86,6 +86,9 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-02（續三）
+- **修正** 天氣預報：加入 `data.error` 檢查，超出 16 天預報範圍時靜默隱藏 widget（4/18–4/20 尚無預報）
+
 ### 2026-04-02（續二）
 - **修正** 天氣 API：移除 `forecast_days` 參數（與 `start_date/end_date` 互斥）
 - **修正** Day 2 多餘住宿卡片：main lodging 改名為「華宿行旅」，spots 移除重複的華宿行旅，保留承攜行旅
