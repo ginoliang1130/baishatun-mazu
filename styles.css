@@ -170,7 +170,7 @@ a {
   padding: 28px 24px;
   text-align: center;
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(1.76rem, 5.2vw, 3rem);
+  font-size: clamp(1.1rem, 4.5vw, 2.4rem);
   font-weight: 600;
   color: var(--accent-strong);
   border-top: 1px solid var(--border);
