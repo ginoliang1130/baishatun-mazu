@@ -86,6 +86,13 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-02（續十一）
+- **新增** `anchorPoints` 加入北港朝天宮（雲林縣北港鎮中山路178號）；北辰派出所 type 改為「中途休息點」
+- **修正** Day 4 strategy 分段顯示 45 萬人潮分流說明
+- **新增** 行程策略區塊（`#route-strategy`）：去程急行軍 + 回程 A/B 組，桌機兩欄
+- **修正** 出席表 `佛系進香` 快取清除（`.replace()` migration）+ `vertical-align: middle` 移至全域
+- **修正** 祈福文字改為 RWD 字級 `clamp(1.1rem, 4.5vw, 2.4rem)`
+
 ### 2026-04-02（續九）
 - **更新** 里程進度條改用 `marchRows`，顯示全程 8 天（D0-D1 至 D8）
 - **新增** 裝備清單：透氣膠帶、小剪刀、藥品、信用卡；修正 localStorage 新增項目後的相容邏輯
