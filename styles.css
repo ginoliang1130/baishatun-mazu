@@ -692,6 +692,39 @@ td:first-child {
 
 }
 
+/* ── Auto-reload chip ────────────────────────────── */
+
+.reload-chip {
+  animation: fadeIn 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reload-now-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(147, 45, 23, 0.25);
+  background: rgba(195, 86, 43, 0.1);
+  color: var(--accent-strong);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Noto Sans TC", sans-serif;
+  transition: background 160ms ease;
+}
+
+.reload-now-btn:hover {
+  background: rgba(195, 86, 43, 0.2);
+}
+
 /* ── Member identity overlay ─────────────────────── */
 
 .member-overlay {
@@ -879,6 +912,10 @@ td:first-child {
   .page-shell {
     width: min(100vw - 16px, 100%);
     padding-top: 8px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
   }
 
   .hero,

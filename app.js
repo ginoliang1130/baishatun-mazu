@@ -1023,6 +1023,27 @@ function initTrackerCard() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+function initAutoReload() {
+  const RELOAD_MS = 15 * 60 * 1000;
+  const WARN_MS = 60 * 1000;
+  const reloadAt = Date.now() + RELOAD_MS;
+
+  setTimeout(() => {
+    const banner = document.getElementById("reload-banner");
+    const secEl = document.getElementById("reload-countdown-sec");
+    if (!banner || !secEl) return;
+    banner.hidden = false;
+
+    const tick = setInterval(() => {
+      const remaining = Math.ceil((reloadAt - Date.now()) / 1000);
+      secEl.textContent = remaining;
+      if (remaining <= 0) clearInterval(tick);
+    }, 1000);
+  }, RELOAD_MS - WARN_MS);
+
+  setTimeout(() => location.reload(), RELOAD_MS);
+}
+
 function init() {
   renderStrategyBoard();
   renderDistancePlan();
@@ -1037,6 +1058,7 @@ function init() {
   renderAttendanceTable();
   renderMapFocusList();
   renderMapEmbed();
+  initAutoReload();
 }
 
 document.addEventListener("DOMContentLoaded", init);
