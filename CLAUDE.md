@@ -86,7 +86,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 - 天氣預報（Open-Meteo，免費無需 key）（已新增）
 - 緊急聯絡 / 醫療站標記
-- 快速分享位置給隊友（Line/WhatsApp）
+- 快速分享位置給隊友（Line/WhatsApp）（已新增）
 
 ## 開發習慣
 
