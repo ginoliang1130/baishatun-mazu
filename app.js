@@ -543,7 +543,7 @@ function getAttendanceState() {
         const defaultCell = fallback[memberIndex][dayIndex];
         return {
           checked: typeof cell?.checked === "boolean" ? cell.checked : defaultCell.checked,
-          note: typeof cell?.note === "string" ? cell.note : defaultCell.note
+          note: (typeof cell?.note === "string" ? cell.note : defaultCell.note).replace(/佛系進香/g, "")
         };
       })
     );
