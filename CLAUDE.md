@@ -86,6 +86,11 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-02（續六）
+- **新增** `googleMapsWalkingUrl()`，所有有地址的點位改為步行路線 URL（`travelmode=walking`）
+- **更新** renderLocationCard 按鈕文字改「步行路線」
+- **新增** Day 0 加入大甲車站（大休點）與梧棲寄居蟹（今晚目的地）兩個 spots
+
 ### 2026-04-02（續五）
 - **更新** 里程精算：Day1 43.5K、Day2 42.5K、Day3 44K、虎尾→北港 19.5K，去程 149.5K
 - **更新** 回程 104K，全程 253.5K（strategy.totalReturnKm）

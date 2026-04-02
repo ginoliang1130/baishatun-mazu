@@ -59,7 +59,18 @@ const APP_DATA = {
       strategy: "22:00 提前起步，不理會登轎。明天 09:00 在大甲起跑。",
       coords: [24.493, 120.679],
       lodging: null,
-      spots: []
+      spots: [
+        {
+          name: "大甲車站",
+          address: "台中市大甲區順天路40號",
+          label: "大休點"
+        },
+        {
+          name: "梧棲寄居蟹",
+          address: "台中市梧棲區港埠路二段431巷22號",
+          label: "今晚目的地"
+        }
+      ]
     },
     {
       id: "day1",
@@ -321,6 +332,10 @@ function googleMapsUrl(query) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
+function googleMapsWalkingUrl(address) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=walking`;
+}
+
 function googleMapsEmbedUrl(query) {
   if (hasGoogleMapsApiKey()) {
     return `https://www.google.com/maps/embed/v1/search?key=${encodeURIComponent(GOOGLE_MAPS_EMBED_API_KEY)}&q=${encodeURIComponent(query)}`;
@@ -454,7 +469,7 @@ function renderLocationCard(item) {
       ${hasAddress ? `<p>${item.address}</p>` : ""}
       ${item.extra ? `<p class="muted-text">${item.extra}</p>` : ""}
       <div class="link-row">
-        <a class="mini-link" href="${googleMapsUrl(mapQuery)}" target="_blank" rel="noreferrer">Google 導航</a>
+        <a class="mini-link" href="${hasAddress ? googleMapsWalkingUrl(mapQuery) : googleMapsUrl(mapQuery)}" target="_blank" rel="noreferrer">步行路線</a>
       </div>
     </article>
   `;
