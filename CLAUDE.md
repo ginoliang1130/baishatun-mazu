@@ -93,7 +93,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
   - 「定位我」按鈕：`getCurrentPosition` 直接跳地圖 iframe 至目前位置
   - 團員 chips 即時顯示：online（有分享）/ stale（30 分鐘以上）/ offline（未分享）；點擊跳地圖
   - Firebase compat SDK 9.23.0 via CDN；`FIREBASE_CONFIG` GitHub Secret 由 Python 注入（解決 sed 無法處理 JSON 引號問題）
-- **修正** `deploy-pages.yml`：`FIREBASE_CONFIG` 改用 Python 替換，sed 只處理 Google Maps key
+- **修正** `deploy-pages.yml`：`FIREBASE_CONFIG` 改用 Python 替換，sed 只處理 Google Maps key；`FIREBASE_CONFIG_STR` 改用 backtick 字串，避免 JSON 雙引號破壞 JS 語法
 - **修正** strategy 文字換行：渲染時將 `\n` 轉為 `<br>` 讓排版正確顯示
 - **修正** 去程策略文字移除「深夜趕路」（全團統一行動，無深夜趕路）
 - **修正** `renderAttendanceCell` 未使用的 `member` 參數改為 `_member`

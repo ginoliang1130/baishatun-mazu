@@ -834,7 +834,7 @@ function renderMapEmbed() {
 
 // ── Firebase real-time location tracking ─────────────────────────────────────
 
-const FIREBASE_CONFIG_STR = "__FIREBASE_CONFIG__";
+const FIREBASE_CONFIG_STR = `__FIREBASE_CONFIG__`;
 const MEMBER_IDENTITY_KEY = "mazu-member-identity-v1";
 
 let db = null;
