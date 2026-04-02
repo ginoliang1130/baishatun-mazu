@@ -86,6 +86,13 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-02（續）
+- **新增** Day 2 住宿點：承攜行旅（彰化縣彰化市中正路二段668號）、華宿行旅（南瑤路411號）
+- **修正** 各天實際公里估算：Day1 42K、Day2 37K、Day3 46K、虎尾→北港 22K，去程合計 147K
+- **新增** 回程估算 145K，strategy 加 `totalReturnKm` 欄位，stat board 顯示來回總計 292K
+- **新增** 天氣預報（Open-Meteo）：每個 day 加 `coords` 座標，切換 Tab 時自動抓氣象，顯示在 day-summary pill 內
+- **新增** 天氣相關 CSS（`.weather-card`、`.weather-pill`）
+
 ### 2026-04-02
 - **修正** 地圖 iframe 看不到：`hasGoogleMapsApiKey()` 無效時加入 keyless URL fallback
 - **修正** h1 兩行排版：還原 `<br />`，移除 `max-width: 7ch` 限制

@@ -5,11 +5,12 @@ const APP_DATA = {
   strategy: {
     headline: "凌晨比媽祖早到北辰派出所",
     summary:
-      "因為 Day 3 在虎尾有最後一個可洗澡小休的中繼站，前三天都要多推一些，一天至少 43K，從虎尾再往北港抓 22K 會比較貼近實際。",
+      "因為 Day 3 在虎尾有最後一個可洗澡小休的中繼站，前三天都要多推一些，Day 3 之後再從虎尾推進北港約 22K。",
+    totalReturnKm: 145,
     milestones: [
-      { label: "Day 1", targetKm: 43, walkingHours: 11, note: "拱天宮 -> 梧棲寄居蟹" },
-      { label: "Day 2", targetKm: 43, walkingHours: 11, note: "寄居蟹 -> 員林火車站 / 彰化華宿行館" },
-      { label: "Day 3", targetKm: 43, walkingHours: 11, note: "員林火車站 -> 虎尾阿利亞民宿" },
+      { label: "Day 1", targetKm: 42, walkingHours: 11, note: "拱天宮 -> 梧棲寄居蟹" },
+      { label: "Day 2", targetKm: 37, walkingHours: 10, note: "寄居蟹 -> 彰化華宿行館" },
+      { label: "Day 3", targetKm: 46, walkingHours: 12, note: "彰化 -> 虎尾阿利亞民宿" },
       { label: "虎尾 -> 北港", targetKm: 22, walkingHours: 6, note: "從虎尾中繼站一路推進北港" }
     ],
     segments: [
@@ -45,6 +46,7 @@ const APP_DATA = {
       title: "去程啟程",
       focus: "集合、整裝、熱身",
       note: "出發日，為隔天正式推進做準備。",
+      coords: [24.493, 120.679],
       lodging: null,
       spots: []
     },
@@ -54,8 +56,9 @@ const APP_DATA = {
       date: "4/13",
       weekday: "一",
       title: "第一波衝刺",
-      focus: "43K 起手式",
+      focus: "42K 起手式",
       note: "第一晚住宿在梧棲，順手把超商與洗衣點收好。",
+      coords: [24.301, 120.518],
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -80,14 +83,25 @@ const APP_DATA = {
       date: "4/14",
       weekday: "二",
       title: "續推彰化",
-      focus: "第二天 43K",
+      focus: "第二天 37K",
       note: "第二晚落腳彰化，補給以市區步調為主。",
+      coords: [24.079, 120.535],
       lodging: {
         name: "彰化華宿行館",
         address: "彰化縣彰化市南瑤路411號",
         label: "住宿"
       },
       spots: [
+        {
+          name: "承攜行旅",
+          address: "彰化縣彰化市中正路二段668號",
+          label: "住宿"
+        },
+        {
+          name: "華宿行旅",
+          address: "彰化縣彰化市南瑤路411號",
+          label: "住宿"
+        },
         {
           name: "7-ELEVEN 曉陽門市",
           address: "彰化縣彰化市民族路341號1樓",
@@ -106,8 +120,9 @@ const APP_DATA = {
       date: "4/15",
       weekday: "三",
       title: "虎尾關鍵中繼",
-      focus: "43K + 虎尾到北港 22K",
+      focus: "46K + 虎尾到北港 22K",
       note: "這一晚是進北港前的最後中繼站，可洗澡小休，僅一間房。從虎尾再往北港推進，抓 22K 比較接近實際任務感。",
+      coords: [23.711, 120.430],
       lodging: {
         name: "阿利亞民宿",
         address: "雲林縣虎尾鎮立新街165號",
@@ -134,6 +149,7 @@ const APP_DATA = {
       title: "北港",
       focus: "北辰派出所達陣",
       note: "住宿暫定在大維哥家或嘉義市，先把北港補給點記住。",
+      coords: [23.571, 120.304],
       lodging: {
         name: "大維哥家 or 嘉義市",
         address: "",
@@ -160,6 +176,7 @@ const APP_DATA = {
       title: "刈火 / 回程啟程",
       focus: "半夜自北港出發",
       note: "回程住宿改住烏日高鐵附近，方便調整節奏。",
+      coords: [24.002, 120.612],
       lodging: {
         name: "赫絲珀HSR高鐵行旅",
         address: "台中市烏日區新興路255號",
@@ -181,6 +198,7 @@ const APP_DATA = {
       title: "回到梧棲",
       focus: "回程補給",
       note: "回程再次住寄居蟹，補洗補休一次完成。",
+      coords: [24.301, 120.518],
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -207,6 +225,7 @@ const APP_DATA = {
       title: "通霄駐駕",
       focus: "最後整補",
       note: "住宿在阿瓜家，7-11 收件資訊也一併保留。",
+      coords: [24.440, 120.667],
       lodging: {
         name: "阿瓜家",
         address: "",
@@ -229,6 +248,7 @@ const APP_DATA = {
       title: "回宮",
       focus: "任務收尾",
       note: "回宮日，住宿預計回家或續住阿瓜家。",
+      coords: [24.493, 120.679],
       lodging: {
         name: "溫暖的家 or 阿瓜家",
         address: "",
@@ -308,19 +328,20 @@ function createSummaryPill(label, value) {
 
 function renderStrategyBoard() {
   const board = document.getElementById("strategy-board");
-  const totalKm = APP_DATA.strategy.milestones.reduce((sum, item) => sum + item.targetKm, 0);
+  const goingKm = APP_DATA.strategy.milestones.reduce((sum, item) => sum + item.targetKm, 0);
+  const roundTripKm = goingKm + APP_DATA.strategy.totalReturnKm;
   board.innerHTML = `
     <div class="stat-chip">
-      <strong>前 3 天 43K / 天</strong>
-      <span>把里程推滿，才能把凌晨進北港的節奏抓在手上。</span>
+      <strong>去程 ${goingKm}K・來回約 ${roundTripKm}K</strong>
+      <span>42 + 37 + 46 + 22 去程，回程估算約 ${APP_DATA.strategy.totalReturnKm}K。</span>
     </div>
     <div class="stat-chip">
       <strong>Day 3 虎尾中繼</strong>
       <span>阿利亞民宿是進北港前最後能洗澡小休的關鍵節點。</span>
     </div>
     <div class="stat-chip">
-      <strong>累計 ${totalKm}K 任務線</strong>
-      <span>43 + 43 + 43 + 22，目標是比媽祖更早到北辰派出所。</span>
+      <strong>目標：比媽祖早到北辰派出所</strong>
+      <span>凌晨推進北港，把節奏抓在自己手上。</span>
     </div>
   `;
 }
@@ -414,6 +435,7 @@ function renderDayPanel() {
         ${createSummaryPill("日期", `${day.date} (${day.weekday})`)}
         ${createSummaryPill("主題", day.title)}
         ${createSummaryPill("焦點", day.focus)}
+        ${day.coords ? '<div class="summary-pill weather-pill" id="weather-widget"><span class="weather-loading">天氣載入中…</span></div>' : ""}
       </div>
       <div class="info-card">
         <h3>${day.shortLabel}｜${day.title}</h3>
@@ -424,6 +446,12 @@ function renderDayPanel() {
       </div>
     </section>
   `;
+
+  if (day.coords) {
+    const [month, d] = day.date.split("/");
+    const dateISO = `2026-${month.padStart(2, "0")}-${d.padStart(2, "0")}`;
+    fetchDayWeather(day.id, day.coords[0], day.coords[1], dateISO);
+  }
 }
 
 function buildDefaultAttendanceState() {
@@ -506,6 +534,62 @@ function renderGearList() {
     saveGearState(GEAR_ITEMS.map(() => false));
     renderGearList();
   });
+}
+
+const weatherCache = {};
+
+function weatherCodeInfo(code) {
+  if (code === 0) return { emoji: "☀️", text: "晴天" };
+  if (code <= 3) return { emoji: "⛅", text: "多雲" };
+  if (code <= 48) return { emoji: "🌫️", text: "有霧" };
+  if (code <= 55) return { emoji: "🌦️", text: "毛毛雨" };
+  if (code <= 65) return { emoji: "🌧️", text: "有雨" };
+  if (code <= 75) return { emoji: "❄️", text: "降雪" };
+  if (code <= 82) return { emoji: "🌦️", text: "陣雨" };
+  if (code <= 86) return { emoji: "❄️", text: "雪陣" };
+  return { emoji: "⛈️", text: "雷雨" };
+}
+
+async function fetchDayWeather(dayId, lat, lng, dateISO) {
+  const widget = document.getElementById("weather-widget");
+  if (!widget) return;
+
+  if (weatherCache[dayId]) {
+    renderWeatherWidget(widget, weatherCache[dayId]);
+    return;
+  }
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_mean,weathercode&timezone=Asia%2FTaipei&start_date=${dateISO}&end_date=${dateISO}&forecast_days=16`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const daily = data.daily;
+    const idx = daily.time.indexOf(dateISO);
+    if (idx === -1) throw new Error();
+    const weather = {
+      maxTemp: daily.temperature_2m_max[idx],
+      minTemp: daily.temperature_2m_min[idx],
+      precipProb: daily.precipitation_probability_mean[idx],
+      code: daily.weathercode[idx]
+    };
+    weatherCache[dayId] = weather;
+    renderWeatherWidget(widget, weather);
+  } catch {
+    if (widget) widget.remove();
+  }
+}
+
+function renderWeatherWidget(widget, weather) {
+  const info = weatherCodeInfo(weather.code);
+  widget.innerHTML = `
+    <div class="weather-card">
+      <span class="weather-emoji">${info.emoji}</span>
+      <span class="weather-desc">${info.text}</span>
+      <span class="weather-temp">${Math.round(weather.minTemp)}–${Math.round(weather.maxTemp)}°C</span>
+      <span class="weather-precip">降雨 ${Math.round(weather.precipProb)}%</span>
+    </div>
+  `;
 }
 
 function toggleAttendance(memberIndex, dayIndex, checked) {
