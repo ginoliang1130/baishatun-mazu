@@ -86,6 +86,14 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-02（續九）
+- **更新** 里程進度條改用 `marchRows`，顯示全程 8 天（D0-D1 至 D8）
+- **新增** 裝備清單：透氣膠帶、小剪刀、藥品、信用卡；修正 localStorage 新增項目後的相容邏輯
+- **修正** Gino 出席狀態「佛系進香」改為 `✅`
+- **修正** 出席表 `td` 加 `vertical-align: middle` 確保勾選框對齊
+- **修正** 祈福文字字級翻倍（`clamp(1.76rem, 5.2vw, 3rem)`），移除 `white-space: nowrap`
+- **新增** 行程檢視器 tab hover 黃金光暈（`box-shadow: 0 0 14px rgba(214, 170, 71, 0.45)`）
+
 ### 2026-04-02（續八）
 - **修改** 行軍總表改為常駐展開（移除 `<details>` 收合）
 - **新增** hero button hover：primary 加深漸層 + 橘色陰影；secondary 填入淡橘背景
