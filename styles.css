@@ -584,7 +584,8 @@ td:first-child {
   .planner-card,
   .map-card,
   .gear-card,
-  .attendance-card {
+  .attendance-card,
+  .blessing-banner {
     grid-column: span 2;
   }
 
