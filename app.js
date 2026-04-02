@@ -296,7 +296,7 @@ const APP_DATA = {
     { name: "宇澤", status: ["✅", "✅", "✅", "✅", "✅", "✅", "✅", "✅", ""] },
     { name: "阿瓜", status: ["✅", "✅", "✅", "✅", "", "", "", "", ""] },
     { name: "肯哥", status: ["✅", "✅", "✅", "✅", "✅", "✅", "", "", ""] },
-    { name: "Gino", status: ["✅ 4/13 才會出現", "✅", "✅", "✅", "佛系進香", "佛系進香", "佛系進香", "✅", "✅"] },
+    { name: "Gino", status: ["✅ 4/13 才會出現", "✅", "✅", "✅", "✅", "✅", "✅", "✅", "✅"] },
     { name: "Frances", status: ["✅", "✅", "✅", "✅", "✅", "✅", "✅", "✅", "✅"] },
     { name: "Joy", status: ["✅ 可能4/13 才會出現", "✅", "", "", "", "", "", "", ""] },
     { name: "Sophia", status: ["✅", "✅", "✅", "", "", "", "", "", ""] },
@@ -324,7 +324,11 @@ const GEAR_ITEMS = [
   "止痛藥／痠痛貼布",
   "電解質包",
   "備用鞋墊",
+  "透氣膠帶",
+  "小剪刀",
+  "藥品",
   "現金",
+  "信用卡",
   "健保卡"
 ];
 
@@ -404,17 +408,18 @@ function renderMarchTable() {
 
 function renderDistancePlan() {
   const wrap = document.getElementById("distance-plan");
-  const maxKm = Math.max(...APP_DATA.strategy.milestones.map((item) => item.targetKm));
-  wrap.innerHTML = APP_DATA.strategy.milestones
+  const rows = APP_DATA.strategy.marchRows;
+  const maxKm = Math.max(...rows.map((r) => r.km));
+  wrap.innerHTML = rows
     .map(
-      (item) => `
+      (row) => `
         <div class="distance-item">
-          <strong>${item.label}</strong>
-          <div class="mini-label">${item.note}</div>
+          <strong>${row.day}</strong>
+          <div class="mini-label">${row.route}</div>
           <div class="progress-track">
-            <div class="progress-value" style="width:${(item.targetKm / maxKm) * 100}%"></div>
+            <div class="progress-value" style="width:${(row.km / maxKm) * 100}%"></div>
           </div>
-          <div class="mini-label">${item.targetKm}K${item.walkingHours ? `・約 ${item.walkingHours} 小時` : ""}</div>
+          <div class="mini-label">${row.km}K・約 ${Math.round(row.km / 3.5)}h</div>
         </div>
       `
     )
@@ -556,8 +561,8 @@ function getGearState() {
     const raw = localStorage.getItem(GEAR_STORAGE_KEY);
     if (!raw) return GEAR_ITEMS.map(() => false);
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length !== GEAR_ITEMS.length) return GEAR_ITEMS.map(() => false);
-    return parsed;
+    if (!Array.isArray(parsed)) return GEAR_ITEMS.map(() => false);
+    return GEAR_ITEMS.map((_, i) => typeof parsed[i] === "boolean" ? parsed[i] : false);
   } catch {
     return GEAR_ITEMS.map(() => false);
   }
