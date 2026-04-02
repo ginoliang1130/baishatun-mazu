@@ -1,8 +1,45 @@
-# mazu
-Baishatun Mazu Pilgrimage
+# mazu — 2026 白沙屯媽祖進香任務地圖
 
-## GitHub Pages Secret
+線上網址：[ginoliang1130.github.io/mazu](https://ginoliang1130.github.io/mazu/)
 
-Add a repository secret named `GOOGLE_MAPS_EMBED_API_KEY`.
+---
 
-The Pages deploy workflow injects that secret into `app.js` at build time, so the key is not stored in the repo source anymore.
+## 關於白沙屯媽祖進香
+
+### 簡介
+
+白沙屯媽祖徒步進香迄今已有 200 多年歷史，早在廟宇建成之前即已開始。每年由苗栗縣通霄鎮白沙屯**拱天宮**出發，途經台中、彰化、雲林，步行至雲林縣**北港朝天宮**謁祖進香，來回約 **400 公里**，是全台各媽祖進香活動中徒步距離最遠的行程。
+
+### 歷史背景
+
+白沙屯舊名「白沙墩」，清乾隆年間（1736–1795）即有移民開墾。拱天宮由境內善士集資籌建，於同治 2 年（1863 年）完工。進香活動歷經兩百餘年，已列為台灣重要的民間宗教文化資產。
+
+### 最大特色
+
+- **路線不固定**：每年天數、路線、歇息停駕地點皆由媽祖指示，全程跟著神轎走。
+- **擲筊決定一切**：出發日期與每日行進方向由擲筊決定，事先無法預知。
+- **曾涉水過濁水溪**：循古代進香路徑橫渡濁水溪，是台灣最特殊的進香隊伍之一。
+- **雙媽同行**：除白沙屯媽祖外，苗栗縣後龍鎮南港里的山邊媽祖也會共乘進香。
+
+### 規模
+
+2026 年報名人數截至 3 月 21 日已突破 **40 萬人**，持續刷新歷史紀錄。
+
+---
+
+## 本專案說明
+
+這是一個針對 2026 年（乙巳年）進香設計的私人任務地圖，整合每日里程策略、住宿補給點、互動地圖與團員出席表，方便香燈腳隊伍在步行中快速查閱。
+
+### 技術
+
+- 純靜態網站（HTML / CSS / JavaScript），無框架、無 build 步驟
+- 部署於 GitHub Pages，推送 `main` branch 自動上線
+
+### GitHub Pages Secret
+
+部署 workflow 在 build 時將 `GOOGLE_MAPS_EMBED_API_KEY` secret 注入 `app.js`，API key 不存入原始碼。
+
+---
+
+資料來源：[內政部台灣宗教文化地圖](https://taiwangods.moi.gov.tw/html/landscape/1_0011.aspx?i=34)
