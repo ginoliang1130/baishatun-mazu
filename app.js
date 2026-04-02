@@ -41,10 +41,18 @@ const APP_DATA = {
     {
       id: "beichen",
       name: "北辰派出所",
-      type: "關鍵目標",
+      type: "中途休息點",
       address: "雲林縣北港鎮北辰路1號",
       query: "北辰派出所 雲林縣北港鎮北辰路1號",
       fallback: [23.5712, 120.3044]
+    },
+    {
+      id: "chaotian",
+      name: "北港朝天宮",
+      type: "終點目標",
+      address: "雲林縣北港鎮中山路178號",
+      query: "北港朝天宮 雲林縣北港鎮中山路178號",
+      fallback: [23.5683, 120.3022]
     }
   ],
   days: [
@@ -169,7 +177,7 @@ const APP_DATA = {
       title: "北港",
       focus: "北辰派出所達陣",
       note: "住宿暫定在大維哥家或嘉義市，先把北港補給點記住。",
-      strategy: "終點是北港朝天宮，北辰派出所只是媽祖入廟前的最後休息點。⚠️ 45 萬人潮：守候北辰組於北辰等媽祖後提早撤退；衝刺朝天宮組清晨 5 點直接前往卡位。嚴禁猜測媽祖路線，神轎可能在土庫或元長繞很久，你們不要等。",
+      strategy: "終點是北港朝天宮，北辰派出所只是媽祖入廟前的最後休息點。\n\n⚠️ 45 萬人潮分流：\n・守候北辰組：在北辰等媽祖，之後提早撤退至住宿點。\n・衝刺朝天宮組：清晨 5 點直接前往卡位。\n\n嚴禁猜測媽祖路線，神轎可能在土庫或元長繞很久，你們不要等。",
       coords: [23.571, 120.304],
       lodging: {
         name: "大維哥家 or 嘉義市",
@@ -424,6 +432,36 @@ function renderDistancePlan() {
       `
     )
     .join("");
+}
+
+function renderRouteStrategy() {
+  const wrap = document.getElementById("route-strategy");
+  wrap.innerHTML = `
+    <div class="route-strategy-wrap">
+      <div class="route-strategy-heading">行程策略</div>
+      <div class="route-strategy-grid">
+        <div class="route-phase">
+          <div class="route-phase-label outbound">去程｜D0–D4 急行軍</div>
+          <ul class="route-phase-list">
+            <li>全團統一行動，深夜趕路、中午進駐、下午大休</li>
+            <li><strong>九點起步律</strong>：D1 早上九點大甲起跑，避開烈日</li>
+            <li><strong>D4 北辰分流</strong>：體力足者衝朝天宮入廟，體力透支者先撤退至住宿點</li>
+          </ul>
+        </div>
+        <div class="route-phase">
+          <div class="route-phase-label return">回程｜D5–D8 分流自主</div>
+          <div class="route-team">
+            <div class="route-team-badge team-a">🚩 A組 跟鑾轎</div>
+            <p>想拿結緣品、感受回鑾熱鬧氛圍、體力尚可的團員。隨神轎節奏停靠，享受鄉親補給。</p>
+          </div>
+          <div class="route-team">
+            <div class="route-team-badge team-b">🐺 B組 孤狼香擔</div>
+            <p>自主配速、避開擁擠或腳步沉重的團員。緊隨香擔（萬年香火）行進，速度規律，清晨趁涼先走，中午前進房補眠。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function renderSegments() {
@@ -799,6 +837,7 @@ function init() {
   renderDistancePlan();
   renderMarchTable();
   renderSegments();
+  renderRouteStrategy();
   renderTabs();
   renderDayPanel();
   renderGearList();
