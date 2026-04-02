@@ -443,7 +443,7 @@ function renderRouteStrategy() {
         <div class="route-phase">
           <div class="route-phase-label outbound">去程｜D0–D4 急行軍</div>
           <ul class="route-phase-list">
-            <li>全團統一行動，深夜趕路、中午進駐、下午大休</li>
+            <li>全團統一行動，中午進駐、下午大休</li>
             <li><strong>九點起步律</strong>：D1 早上九點大甲起跑，避開烈日</li>
             <li><strong>D4 北辰分流</strong>：體力足者衝朝天宮入廟，體力透支者先撤退至住宿點</li>
           </ul>
@@ -539,7 +539,7 @@ function renderDayPanel() {
       <div class="info-card">
         <h3>${day.shortLabel}｜${day.title}</h3>
         <p>${day.note}</p>
-        ${day.strategy ? `<p class="day-strategy-note">${day.strategy}</p>` : ""}
+        ${day.strategy ? `<p class="day-strategy-note">${day.strategy.replace(/\n/g, "<br>")}</p>` : ""}
       </div>
       <div class="detail-grid">
         ${detailItems.length ? detailItems.map(renderLocationCard).join("") : '<article class="detail-card"><h3>當日任務</h3><p>今天以移動與整隊為主，暫無固定補給點。</p></article>'}
@@ -699,7 +699,7 @@ function toggleAttendance(memberIndex, dayIndex, checked) {
   saveAttendanceState(attendanceState);
 }
 
-function renderAttendanceCell(member, memberIndex, dayIndex, cellState) {
+function renderAttendanceCell(_member, memberIndex, dayIndex, cellState) {
   const inputId = `attendance-${memberIndex}-${dayIndex}`;
   const note = cellState.note ? `<span class="attendance-note">${cellState.note}</span>` : "";
 
@@ -832,6 +832,188 @@ function renderMapEmbed() {
   iframe.src = googleMapsEmbedUrl(activeFocus.query);
 }
 
+// ── Firebase real-time location tracking ─────────────────────────────────────
+
+const FIREBASE_CONFIG_STR = "__FIREBASE_CONFIG__";
+const MEMBER_IDENTITY_KEY = "mazu-member-identity-v1";
+
+let db = null;
+let trackerWatchId = null;
+let isSharing = false;
+const teamLocations = {};
+
+function getMemberIdentity() {
+  return localStorage.getItem(MEMBER_IDENTITY_KEY) || null;
+}
+
+function setMemberIdentity(name) {
+  localStorage.setItem(MEMBER_IDENTITY_KEY, name);
+}
+
+function memberIdFromName(name) {
+  return name.replace(/\s+/g, "_");
+}
+
+function initFirebase() {
+  if (!FIREBASE_CONFIG_STR || FIREBASE_CONFIG_STR.includes("__FIREBASE_CONFIG__")) return;
+  try {
+    const config = JSON.parse(FIREBASE_CONFIG_STR);
+    firebase.initializeApp(config);
+    db = firebase.database();
+    watchTeamLocations();
+  } catch (e) {
+    console.warn("Firebase init failed", e);
+  }
+}
+
+function writeLocation(name, lat, lng) {
+  if (!db) return;
+  const id = memberIdFromName(name);
+  db.ref(`locations/${id}`).set({ name, lat, lng, last_updated: Date.now() });
+}
+
+function startSharing(name) {
+  if (trackerWatchId !== null) navigator.geolocation.clearWatch(trackerWatchId);
+  isSharing = true;
+  trackerWatchId = navigator.geolocation.watchPosition(
+    (pos) => writeLocation(name, pos.coords.latitude, pos.coords.longitude),
+    () => {},
+    { enableHighAccuracy: true, maximumAge: 30000 }
+  );
+  renderTrackerIdentity();
+}
+
+function stopSharing() {
+  if (trackerWatchId !== null) {
+    navigator.geolocation.clearWatch(trackerWatchId);
+    trackerWatchId = null;
+  }
+  isSharing = false;
+  renderTrackerIdentity();
+}
+
+function watchTeamLocations() {
+  if (!db) return;
+  db.ref("locations").on("value", (snapshot) => {
+    const data = snapshot.val() || {};
+    Object.keys(teamLocations).forEach((k) => delete teamLocations[k]);
+    Object.assign(teamLocations, data);
+    renderTrackerChips();
+  });
+}
+
+function jumpToCoords(lat, lng) {
+  const iframe = document.getElementById("map-embed");
+  if (!iframe) return;
+  const query = `${lat},${lng}`;
+  if (hasGoogleMapsApiKey()) {
+    iframe.src = `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(GOOGLE_MAPS_EMBED_API_KEY)}&q=${query}&zoom=16`;
+  } else {
+    iframe.src = `https://maps.google.com/maps?q=${query}&output=embed&z=16`;
+  }
+}
+
+function timeSince(ts) {
+  if (!ts) return "";
+  const diffMin = Math.floor((Date.now() - ts) / 60000);
+  if (diffMin < 1) return "剛剛";
+  if (diffMin < 60) return `${diffMin} 分鐘前`;
+  return `${Math.floor(diffMin / 60)} 小時前`;
+}
+
+function renderTrackerIdentity() {
+  const wrap = document.getElementById("tracker-identity");
+  if (!wrap) return;
+  const identity = getMemberIdentity();
+  const hasGeo = "geolocation" in navigator;
+  const firebaseReady = Boolean(db);
+
+  wrap.innerHTML = `
+    <div class="tracker-identity-row">
+      <span class="tracker-who">
+        ${identity ? `你是：<strong>${identity}</strong>` : "尚未選擇身分"}
+      </span>
+      <button class="tracker-switch-btn" id="tracker-switch-identity">切換身分</button>
+      ${identity && hasGeo && firebaseReady ? `
+        <button class="tracker-share-btn ${isSharing ? "sharing" : ""}" id="tracker-share-toggle">
+          ${isSharing ? "🔴 停止分享" : "📍 分享位置"}
+        </button>
+      ` : ""}
+      ${hasGeo ? `<button class="tracker-locate-btn" id="tracker-locate-me">定位我</button>` : ""}
+    </div>
+  `;
+
+  document.getElementById("tracker-switch-identity")?.addEventListener("click", showMemberOverlay);
+
+  document.getElementById("tracker-share-toggle")?.addEventListener("click", () => {
+    if (isSharing) stopSharing();
+    else startSharing(identity);
+  });
+
+  document.getElementById("tracker-locate-me")?.addEventListener("click", () => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => jumpToCoords(pos.coords.latitude, pos.coords.longitude),
+      () => alert("無法取得位置，請確認已開啟定位權限。")
+    );
+  });
+}
+
+function renderTrackerChips() {
+  const wrap = document.getElementById("tracker-chips");
+  if (!wrap) return;
+  const STALE_MS = 30 * 60 * 1000;
+  const now = Date.now();
+
+  wrap.innerHTML = APP_DATA.attendance.map((member) => {
+    const id = memberIdFromName(member.name);
+    const loc = teamLocations[id] || null;
+    const hasLoc = loc && loc.lat && loc.lng;
+    const stale = hasLoc && (now - loc.last_updated > STALE_MS);
+    return `
+      <button
+        class="tracker-chip ${hasLoc ? (stale ? "stale" : "online") : "offline"}"
+        ${hasLoc ? `data-lat="${loc.lat}" data-lng="${loc.lng}"` : "disabled"}
+      >
+        <span class="tracker-chip-name">${member.name}</span>
+        <span class="tracker-chip-time">${hasLoc ? timeSince(loc.last_updated) : "未分享"}</span>
+      </button>
+    `;
+  }).join("");
+
+  wrap.querySelectorAll(".tracker-chip[data-lat]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      jumpToCoords(parseFloat(btn.dataset.lat), parseFloat(btn.dataset.lng));
+      document.getElementById("route-map-section")?.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+}
+
+function showMemberOverlay() {
+  const overlay = document.getElementById("member-overlay");
+  const grid = document.getElementById("member-grid");
+  if (!overlay || !grid) return;
+  grid.innerHTML = APP_DATA.attendance.map((m) => `
+    <button class="member-pick-btn" data-name="${m.name}">${m.name}</button>
+  `).join("");
+  grid.querySelectorAll(".member-pick-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setMemberIdentity(btn.dataset.name);
+      overlay.hidden = true;
+      renderTrackerIdentity();
+    });
+  });
+  overlay.hidden = false;
+}
+
+function initTrackerCard() {
+  const identity = getMemberIdentity();
+  if (!identity) showMemberOverlay();
+  renderTrackerIdentity();
+  renderTrackerChips();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 function init() {
   renderStrategyBoard();
   renderDistancePlan();
@@ -840,6 +1022,8 @@ function init() {
   renderRouteStrategy();
   renderTabs();
   renderDayPanel();
+  initFirebase();
+  initTrackerCard();
   renderGearList();
   renderAttendanceTable();
   renderMapFocusList();

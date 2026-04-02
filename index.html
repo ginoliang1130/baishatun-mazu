@@ -14,9 +14,17 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Cormorant+Garamond:wght@600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260402-23" />
+    <link rel="stylesheet" href="./styles.css?v=20260402-26" />
   </head>
   <body>
+    <div id="member-overlay" class="member-overlay" hidden>
+      <div class="member-overlay-card">
+        <p class="member-overlay-title">你是哪位團員？</p>
+        <div class="member-overlay-grid" id="member-grid"></div>
+        <p class="member-overlay-note">選好後可在「定位追蹤」切換身分。</p>
+      </div>
+    </div>
+
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
@@ -85,6 +93,18 @@
           <div class="map-focus-list" id="map-focus-list"></div>
         </section>
 
+        <section class="card tracker-card" id="tracker-card">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Team Tracker</p>
+              <h2>定位追蹤</h2>
+            </div>
+            <p class="section-note">即時顯示分享位置的團員，點擊跳地圖。</p>
+          </div>
+          <div id="tracker-identity"></div>
+          <div class="tracker-chips" id="tracker-chips"></div>
+        </section>
+
         <section class="card gear-card">
           <div class="section-heading">
             <div>
@@ -115,6 +135,8 @@
         </main>
     </div>
 
-    <script src="./app.js?v=20260402-23"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="./app.js?v=20260402-26"></script>
   </body>
 </html>

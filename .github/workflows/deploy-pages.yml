@@ -25,10 +25,20 @@ jobs:
       - name: Build static site
         env:
           GOOGLE_MAPS_EMBED_API_KEY: ${{ secrets.GOOGLE_MAPS_EMBED_API_KEY }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
           mkdir -p dist
           cp index.html styles.css .nojekyll dist/
           sed "s|__GOOGLE_MAPS_EMBED_API_KEY__|${GOOGLE_MAPS_EMBED_API_KEY}|g" app.js > dist/app.js
+          python3 << 'PYEOF'
+          import os
+          config = os.environ['FIREBASE_CONFIG']
+          with open('dist/app.js', 'r') as f:
+              content = f.read()
+          content = content.replace('__FIREBASE_CONFIG__', config)
+          with open('dist/app.js', 'w') as f:
+              f.write(content)
+          PYEOF
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -86,7 +86,17 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
-### 2026-04-02（續十一）
+### 2026-04-02（Firebase 即時定位 + 策略修正）
+- **新增** Firebase 即時定位追蹤（`Team Tracker` card）：
+  - 首次載入顯示身分選擇 overlay，14 位團員一鍵選取，存入 `localStorage`
+  - 「📍 分享位置」按鈕：`watchPosition` 持續寫入 `Firebase Realtime DB`（`locations/{id}`）
+  - 「定位我」按鈕：`getCurrentPosition` 直接跳地圖 iframe 至目前位置
+  - 團員 chips 即時顯示：online（有分享）/ stale（30 分鐘以上）/ offline（未分享）；點擊跳地圖
+  - Firebase compat SDK 9.23.0 via CDN；`FIREBASE_CONFIG` GitHub Secret 由 Python 注入（解決 sed 無法處理 JSON 引號問題）
+- **修正** `deploy-pages.yml`：`FIREBASE_CONFIG` 改用 Python 替換，sed 只處理 Google Maps key
+- **修正** strategy 文字換行：渲染時將 `\n` 轉為 `<br>` 讓排版正確顯示
+- **修正** 去程策略文字移除「深夜趕路」（全團統一行動，無深夜趕路）
+- **修正** `renderAttendanceCell` 未使用的 `member` 參數改為 `_member`
 - **新增** `anchorPoints` 加入北港朝天宮（雲林縣北港鎮中山路178號）；北辰派出所 type 改為「中途休息點」
 - **修正** Day 4 strategy 分段顯示 45 萬人潮分流說明
 - **新增** 行程策略區塊（`#route-strategy`）：去程急行軍 + 回程 A/B 組，桌機兩欄
