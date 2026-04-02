@@ -142,11 +142,35 @@ a {
   background: rgba(255, 248, 239, 0.82);
 }
 
-.primary-action:hover,
-.secondary-action:hover,
+.primary-action:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #d4622f 0%, #a33318 100%);
+  box-shadow: 0 8px 20px rgba(147, 45, 23, 0.35);
+}
+
+.secondary-action:hover {
+  transform: translateY(-2px);
+  background: rgba(195, 86, 43, 0.1);
+  border-color: rgba(147, 45, 23, 0.4);
+  box-shadow: 0 6px 16px rgba(147, 45, 23, 0.12);
+}
+
 .mini-link:hover,
 .tab-button:hover {
   transform: translateY(-1px);
+}
+
+.blessing-banner {
+  margin-top: 32px;
+  padding: 28px 24px;
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 600;
+  color: var(--accent-strong);
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
 }
 
 .hero-stat-board {

@@ -3,25 +3,25 @@ const GOOGLE_MAPS_EMBED_API_KEY = "__GOOGLE_MAPS_EMBED_API_KEY__";
 const APP_DATA = {
   title: "2026 白沙屯媽祖進香任務地圖",
   strategy: {
-    headline: "凌晨比媽祖早到北辰派出所",
+    headline: "堅定走自己的香路・北港朝天宮",
     summary:
-      "不預測媽祖路線，堅定走自己的香路。前三天平均 43K，Day 3 半夜 23:30 從虎尾起步，04:30 卡位北辰派出所。",
+      "不預測媽祖路線，堅定走自己的香路。前三天平均 43K，Day 3 半夜 23:30 從虎尾起步，終點是北港朝天宮，北辰派出所僅為休息點。",
     totalReturnKm: 104,
     milestones: [
       { label: "Day 1", targetKm: 43.5, walkingHours: 11, note: "白沙屯 → 大甲 → 梧棲" },
       { label: "Day 2", targetKm: 42.5, walkingHours: 11, note: "梧棲 → 彰化 → 員林" },
-      { label: "Day 3", targetKm: 44, walkingHours: 11, note: "員林 → 西螺 → 虎尾" },
-      { label: "虎尾 → 北港", targetKm: 19.5, walkingHours: 5, note: "虎尾 → 土庫 → 元長 → 北辰派出所" }
+      { label: "Day 3", targetKm: 44,   walkingHours: 11, note: "員林 → 西螺 → 虎尾" },
+      { label: "虎尾 → 北港", targetKm: 20.5, walkingHours: 5, note: "虎尾 → 土庫 → 元長 → 北辰 → 朝天宮" }
     ],
     marchRows: [
-      { day: "D0-D1", route: "白沙屯 ➔ 大甲 ➔ 梧棲",        km: 43.5, cumKm: 43.5,  tip: "22:00 提前起步，09:00 大甲起步，中午進梧棲" },
-      { day: "D2",    route: "梧棲 ➔ 彰化 ➔ 員林",           km: 42.5, cumKm: 86.0,  tip: "00:00 出發，11:30 進駐員林補眠，躲避烈日" },
-      { day: "D3",    route: "員林 ➔ 西螺 ➔ 虎尾",           km: 44.0, cumKm: 130.0, tip: "01:00 過西螺大橋，12:30 前到虎尾民宿" },
-      { day: "D4",    route: "虎尾 ➔ 北港北辰派出所",         km: 19.5, cumKm: 149.5, tip: "⚠️ 23:30 虎尾起步，04:30 卡位北辰，配戴強光燈" },
-      { day: "D5",    route: "北港 ➔ 烏日（赫絲珀）",         km: 33.0, cumKm: 182.5, tip: "刈火後起駕，入住烏日修復體力" },
-      { day: "D6",    route: "烏日 ➔ 梧棲（寄居蟹）",         km: 24.0, cumKm: 206.5, tip: "避開雙媽會擁擠段，回棲身處大休" },
-      { day: "D7",    route: "梧棲 ➔ 通霄（阿瓜家）",         km: 36.5, cumKm: 243.0, tip: "進入家鄉段，最後體能燃燒" },
-      { day: "D8",    route: "通霄 ➔ 白沙屯拱天宮",           km: 10.5, cumKm: 253.5, tip: "陪媽祖走完最後一哩路，回宮安座" }
+      { day: "D0-D1", route: "白沙屯 ➔ 大甲 ➔ 梧棲",      km: 43.5, cumKm: 43.5,  tip: "22:00 提前起步，09:00 大甲起步，中午進梧棲" },
+      { day: "D2",    route: "梧棲 ➔ 彰化 ➔ 員林",         km: 42.5, cumKm: 86.0,  tip: "00:00 出發，先過大肚溪橋，中午進員林補眠" },
+      { day: "D3",    route: "員林 ➔ 西螺 ➔ 虎尾",         km: 44.0, cumKm: 130.0, tip: "01:00 過西螺大橋，12:30 前到虎尾，當晚 19:00 熄燈" },
+      { day: "D4",    route: "虎尾 ➔ 北港朝天宮",           km: 20.5, cumKm: 150.5, tip: "⚠️ 23:30 虎尾起步，北辰為休息點，終點是朝天宮" },
+      { day: "D5",    route: "北港 ➔ 烏日（赫絲珀）",       km: 33.0, cumKm: 183.5, tip: "刈火後起駕，入住烏日修復體力" },
+      { day: "D6",    route: "烏日 ➔ 梧棲（寄居蟹）",       km: 24.0, cumKm: 207.5, tip: "避開雙媽會擁擠段，回棲身處大休" },
+      { day: "D7",    route: "梧棲 ➔ 通霄（阿瓜家）",       km: 36.5, cumKm: 244.0, tip: "進入家鄉段，最後體能燃燒" },
+      { day: "D8",    route: "通霄 ➔ 白沙屯拱天宮",         km: 10.5, cumKm: 254.5, tip: "陪媽祖走完最後一哩路，回宮安座" }
     ],
     segments: [
       "拱天宮 -> 寄居蟹",
@@ -141,7 +141,7 @@ const APP_DATA = {
       title: "虎尾關鍵中繼",
       focus: "46K + 虎尾到北港 22K",
       note: "這一晚是進北港前的最後中繼站，可洗澡小休，僅一間房。01:00 過西螺大橋，12:30 前抵達。",
-      strategy: "⚠️ 23:30（今晚）從虎尾起步，經土庫、元長進北港，04:30 卡位北辰派出所。深夜路段昏暗，務必配戴強光燈具。",
+      strategy: "當晚 19:00 必須熄燈。23:30 從虎尾起步，經土庫、元長深夜推進，深夜路段昏暗務必配戴強光燈具。",
       coords: [23.711, 120.430],
       lodging: {
         name: "阿利亞民宿",
@@ -169,7 +169,7 @@ const APP_DATA = {
       title: "北港",
       focus: "北辰派出所達陣",
       note: "住宿暫定在大維哥家或嘉義市，先把北港補給點記住。",
-      strategy: "目標只有「北辰派出所」，嚴禁猜測媽祖路線。神轎可能在土庫或元長繞很久，你們不要等。",
+      strategy: "終點是北港朝天宮，北辰派出所只是媽祖入廟前的最後休息點。⚠️ 45 萬人潮：守候北辰組於北辰等媽祖後提早撤退；衝刺朝天宮組清晨 5 點直接前往卡位。嚴禁猜測媽祖路線，神轎可能在土庫或元長繞很久，你們不要等。",
       coords: [23.571, 120.304],
       lodging: {
         name: "大維哥家 or 嘉義市",
@@ -358,15 +358,15 @@ function renderStrategyBoard() {
   board.innerHTML = `
     <div class="stat-chip">
       <strong>全程 ${totalKm} K</strong>
-      <span>去程 ${goingKm}K・回程 ${APP_DATA.strategy.totalReturnKm}K，共 253.5 公里。</span>
+      <span>去程 ${goingKm}K・回程 ${APP_DATA.strategy.totalReturnKm}K，共 254.5 公里。</span>
     </div>
     <div class="stat-chip">
-      <strong>Day 3 半夜 23:30 起步</strong>
-      <span>從虎尾出發，04:30 前卡位北辰派出所。</span>
+      <strong>Day 3 當晚 19:00 熄燈・23:30 起步</strong>
+      <span>從虎尾出發，終點是北港朝天宮，北辰只是休息點。</span>
     </div>
     <div class="stat-chip">
       <strong>嚴禁猜測媽祖路線</strong>
-      <span>堅定走自己的香路，目標只有北辰派出所。</span>
+      <span>堅定走自己的香路，45 萬人潮請衡量體力與安全。</span>
     </div>
   `;
 }
