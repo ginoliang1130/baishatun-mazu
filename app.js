@@ -7,10 +7,10 @@ const APP_DATA = {
     summary:
       "因為 Day 3 在虎尾有最後一個可洗澡小休的中繼站，前三天都要多推一些，一天至少 43K，從虎尾再往北港抓 22K 會比較貼近實際。",
     milestones: [
-      { label: "Day 1", targetKm: 43, note: "拱天宮 -> 梧棲寄居蟹" },
-      { label: "Day 2", targetKm: 43, note: "寄居蟹 -> 員林火車站 / 彰化華宿行館" },
-      { label: "Day 3", targetKm: 43, note: "員林火車站 -> 虎尾阿利亞民宿" },
-      { label: "虎尾 -> 北港", targetKm: 22, note: "從虎尾中繼站一路推進北港" }
+      { label: "Day 1", targetKm: 43, walkingHours: 11, note: "拱天宮 -> 梧棲寄居蟹" },
+      { label: "Day 2", targetKm: 43, walkingHours: 11, note: "寄居蟹 -> 員林火車站 / 彰化華宿行館" },
+      { label: "Day 3", targetKm: 43, walkingHours: 11, note: "員林火車站 -> 虎尾阿利亞民宿" },
+      { label: "虎尾 -> 北港", targetKm: 22, walkingHours: 6, note: "從虎尾中繼站一路推進北港" }
     ],
     segments: [
       "拱天宮 -> 寄居蟹",
@@ -323,7 +323,7 @@ function renderDistancePlan() {
           <div class="progress-track">
             <div class="progress-value" style="width:${(item.targetKm / maxKm) * 100}%"></div>
           </div>
-          <div class="mini-label">${item.targetKm}K</div>
+          <div class="mini-label">${item.targetKm}K${item.walkingHours ? `・約 ${item.walkingHours} 小時` : ""}</div>
         </div>
       `
     )
@@ -363,7 +363,6 @@ function renderTabs() {
       state.activeMapFocusId = null;
       renderTabs();
       renderDayPanel();
-      renderMapMissionOverlay();
       renderMapFocusList();
       renderMapEmbed();
     });
@@ -508,47 +507,6 @@ function renderAttendanceTable() {
   });
 }
 
-function getMapMissionMeta() {
-  const day = APP_DATA.days.find((item) => item.id === state.activeDayId) || APP_DATA.days[0];
-  const missionByDay = {
-    day0: { label: "Day 0", km: "熱身", note: "去程啟程，先整裝，讓隔天能直接進節奏。" },
-    day1: { label: "Day 1", km: "43K", note: "第一天先把里程推滿，晚上住梧棲寄居蟹。" },
-    day2: { label: "Day 2", km: "43K", note: "第二天續推彰化，保持前 3 天的衝刺節奏。" },
-    day3: { label: "Day 3", km: "43K + 22K", note: "先到虎尾中繼，再從虎尾一路推進北港。" },
-    day4: { label: "Day 4", km: "北港達陣", note: "關鍵是比媽祖更早抵達北辰派出所。" },
-    day5: { label: "Day 5", km: "回程啟程", note: "刈火後半夜出發，回程重新抓補給節奏。" },
-    day6: { label: "Day 6", km: "回程補給", note: "回到梧棲，補洗補休一次完成。" },
-    day7: { label: "Day 7", km: "通霄駐駕", note: "最後整補，準備回宮收尾。" },
-    day8: { label: "Day 8", km: "回宮", note: "任務收尾，把節奏走完整。" }
-  };
-
-  return missionByDay[day.id] || { label: day.shortLabel, km: day.focus, note: day.note };
-}
-
-function renderMapMissionOverlay() {
-  const wrap = document.getElementById("map-mission-overlay");
-  const mission = getMapMissionMeta();
-  const dayFocuses = APP_DATA.strategy.milestones;
-
-  wrap.innerHTML = `
-    <div class="map-mission-card">
-      <strong>${mission.label}｜${mission.km}</strong>
-      <p>${mission.note}</p>
-    </div>
-    <div class="map-mileage-strip">
-      ${dayFocuses
-        .map((item) => {
-          const isActive =
-            (state.activeDayId === "day1" && item.label === "Day 1") ||
-            (state.activeDayId === "day2" && item.label === "Day 2") ||
-            (state.activeDayId === "day3" && (item.label === "Day 3" || item.label === "虎尾 -> 北港"));
-
-          return `<div class="map-mileage-chip ${isActive ? "active" : ""}">${item.label} ${item.targetKm}K</div>`;
-        })
-        .join("")}
-    </div>
-  `;
-}
 
 function getMapFocusOptions() {
   const activeDay = APP_DATA.days.find((item) => item.id === state.activeDayId) || APP_DATA.days[0];
@@ -640,7 +598,6 @@ function init() {
   renderTabs();
   renderDayPanel();
   renderAttendanceTable();
-  renderMapMissionOverlay();
   renderMapFocusList();
   renderMapEmbed();
 }

@@ -202,58 +202,12 @@ a {
   background: #f3e8d2;
 }
 
-.map-mission-overlay {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 2;
-  display: grid;
-  gap: 10px;
-  width: min(330px, calc(100% - 28px));
-}
-
-.map-mission-card {
-  padding: 12px 14px;
-  border-radius: 18px;
-  background: rgba(255, 249, 238, 0.92);
-  border: 1px solid rgba(88, 57, 39, 0.14);
-  box-shadow: 0 12px 24px rgba(66, 44, 25, 0.16);
-  backdrop-filter: blur(10px);
-}
-
-.map-mission-card strong {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 6px;
-}
-
-.map-mission-card p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.map-mileage-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.map-mileage-chip,
 .focus-chip {
   padding: 8px 12px;
   border-radius: 999px;
   background: rgba(255, 250, 241, 0.92);
   border: 1px solid var(--border);
   font-size: 0.92rem;
-}
-
-.map-mileage-chip.active {
-  background: linear-gradient(135deg, rgba(195, 86, 43, 0.16), rgba(214, 170, 71, 0.18));
-  border-color: rgba(147, 45, 23, 0.32);
-  color: var(--accent-strong);
-  font-weight: 800;
 }
 
 .map-focus-list {
@@ -497,12 +451,6 @@ td:first-child {
   .card {
     border-radius: 24px;
     padding: 18px;
-  }
-
-  .map-mission-overlay {
-    position: static;
-    width: 100%;
-    margin-bottom: 12px;
   }
 
   #map-embed {
