@@ -282,7 +282,7 @@ const APP_DATA = {
 };
 
 const state = {
-  activeDayId: "day1",
+  activeDayId: "day0",
   activeMapFocusId: null
 };
 
