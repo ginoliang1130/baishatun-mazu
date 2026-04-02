@@ -1,16 +1,16 @@
-const GOOGLE_MAPS_EMBED_API_KEY = "AIzaSyA89Q4TFE4YhHgNafvv_U84t-XGF_HRxxU";
+const GOOGLE_MAPS_EMBED_API_KEY = "__GOOGLE_MAPS_EMBED_API_KEY__";
 
 const APP_DATA = {
   title: "2026 白沙屯媽祖進香任務地圖",
   strategy: {
     headline: "凌晨比媽祖早到北辰派出所",
     summary:
-      "因為 Day 3 在虎尾有最後一個可洗澡小休的中繼站，前三天都要多推一些，一天至少 43K，第三天半夜再補最後 12K 進北港。",
+      "因為 Day 3 在虎尾有最後一個可洗澡小休的中繼站，前三天都要多推一些，一天至少 43K，從虎尾再往北港抓 22K 會比較貼近實際。",
     milestones: [
       { label: "Day 1", targetKm: 43, note: "拱天宮 -> 梧棲寄居蟹" },
       { label: "Day 2", targetKm: 43, note: "寄居蟹 -> 員林火車站 / 彰化華宿行館" },
       { label: "Day 3", targetKm: 43, note: "員林火車站 -> 虎尾阿利亞民宿" },
-      { label: "Final Push", targetKm: 12, note: "半夜再走 12K -> 北辰派出所" }
+      { label: "虎尾 -> 北港", targetKm: 22, note: "從虎尾中繼站一路推進北港" }
     ],
     segments: [
       "拱天宮 -> 寄居蟹",
@@ -106,8 +106,8 @@ const APP_DATA = {
       date: "4/15",
       weekday: "三",
       title: "虎尾關鍵中繼",
-      focus: "43K + 半夜補最後 12K",
-      note: "這一晚是進北港前的最後中繼站，可洗澡小休，僅一間房。",
+      focus: "43K + 虎尾到北港 22K",
+      note: "這一晚是進北港前的最後中繼站，可洗澡小休，僅一間房。從虎尾再往北港推進，抓 22K 比較接近實際任務感。",
       lodging: {
         name: "阿利亞民宿",
         address: "雲林縣虎尾鎮立新街165號",
@@ -281,6 +281,10 @@ function googleMapsEmbedUrl(query) {
   return `https://www.google.com/maps/embed/v1/search?key=${encodeURIComponent(GOOGLE_MAPS_EMBED_API_KEY)}&q=${encodeURIComponent(query)}`;
 }
 
+function hasGoogleMapsApiKey() {
+  return Boolean(GOOGLE_MAPS_EMBED_API_KEY) && !GOOGLE_MAPS_EMBED_API_KEY.includes("__GOOGLE_MAPS_EMBED_API_KEY__");
+}
+
 function createSummaryPill(label, value) {
   return `<div class="summary-pill"><strong>${label}</strong> ${value}</div>`;
 }
@@ -299,7 +303,7 @@ function renderStrategyBoard() {
     </div>
     <div class="stat-chip">
       <strong>累計 ${totalKm}K 任務線</strong>
-      <span>43 + 43 + 43 + 12，目標是比媽祖更早到北辰派出所。</span>
+      <span>43 + 43 + 43 + 22，目標是比媽祖更早到北辰派出所。</span>
     </div>
   `;
 }
@@ -356,6 +360,7 @@ function renderTabs() {
       state.activeMapFocusId = null;
       renderTabs();
       renderDayPanel();
+      renderMapMissionOverlay();
       renderMapFocusList();
       renderMapEmbed();
     });
@@ -368,7 +373,7 @@ function renderLocationCard(item) {
   return `
     <article class="detail-card">
       <h3>${item.label}｜${item.name}</h3>
-      <p>${hasAddress ? item.address : "地址待補，先保留這個任務點。"}</p>
+      ${hasAddress ? `<p>${item.address}</p>` : ""}
       ${item.extra ? `<p class="muted-text">${item.extra}</p>` : ""}
       <div class="link-row">
         <a class="mini-link" href="${googleMapsUrl(mapQuery)}" target="_blank" rel="noreferrer">Google 導航</a>
@@ -500,16 +505,46 @@ function renderAttendanceTable() {
   });
 }
 
-function renderLegend() {
-  const legend = document.getElementById("map-legend");
-  legend.innerHTML = [
-    "Google Maps Embed iframe",
-    "建議先鎖定起點、北辰派出所與當日住宿",
-    "每個卡片都保留 Google 導航連結",
-    "沒有完整地址的點位只顯示按鈕，不嵌入地圖"
-  ]
-    .map((item) => `<div class="legend-item">${item}</div>`)
-    .join("");
+function getMapMissionMeta() {
+  const day = APP_DATA.days.find((item) => item.id === state.activeDayId) || APP_DATA.days[0];
+  const missionByDay = {
+    day0: { label: "Day 0", km: "熱身", note: "去程啟程，先整裝，讓隔天能直接進節奏。" },
+    day1: { label: "Day 1", km: "43K", note: "第一天先把里程推滿，晚上住梧棲寄居蟹。" },
+    day2: { label: "Day 2", km: "43K", note: "第二天續推彰化，保持前 3 天的衝刺節奏。" },
+    day3: { label: "Day 3", km: "43K + 22K", note: "先到虎尾中繼，再從虎尾一路推進北港。" },
+    day4: { label: "Day 4", km: "北港達陣", note: "關鍵是比媽祖更早抵達北辰派出所。" },
+    day5: { label: "Day 5", km: "回程啟程", note: "刈火後半夜出發，回程重新抓補給節奏。" },
+    day6: { label: "Day 6", km: "回程補給", note: "回到梧棲，補洗補休一次完成。" },
+    day7: { label: "Day 7", km: "通霄駐駕", note: "最後整補，準備回宮收尾。" },
+    day8: { label: "Day 8", km: "回宮", note: "任務收尾，把節奏走完整。" }
+  };
+
+  return missionByDay[day.id] || { label: day.shortLabel, km: day.focus, note: day.note };
+}
+
+function renderMapMissionOverlay() {
+  const wrap = document.getElementById("map-mission-overlay");
+  const mission = getMapMissionMeta();
+  const dayFocuses = APP_DATA.strategy.milestones;
+
+  wrap.innerHTML = `
+    <div class="map-mission-card">
+      <strong>${mission.label}｜${mission.km}</strong>
+      <p>${mission.note}</p>
+    </div>
+    <div class="map-mileage-strip">
+      ${dayFocuses
+        .map((item) => {
+          const isActive =
+            (state.activeDayId === "day1" && item.label === "Day 1") ||
+            (state.activeDayId === "day2" && item.label === "Day 2") ||
+            (state.activeDayId === "day3" && (item.label === "Day 3" || item.label === "虎尾 -> 北港"));
+
+          return `<div class="map-mileage-chip ${isActive ? "active" : ""}">${item.label} ${item.targetKm}K</div>`;
+        })
+        .join("")}
+    </div>
+  `;
 }
 
 function getMapFocusOptions() {
@@ -551,7 +586,8 @@ function ensureActiveMapFocus() {
   const matched = focusOptions.find((item) => item.id === state.activeMapFocusId);
   if (matched) return matched;
 
-  const preferredDayFocus = focusOptions.find((item) => item.id.startsWith(`${state.activeDayId}-`) && item.hasAddress !== false);
+  const preferredDayFocus = focusOptions.find((item) => item.id === `${state.activeDayId}-lodging`) ||
+    focusOptions.find((item) => item.id.startsWith(`${state.activeDayId}-`));
   const nextFocus = preferredDayFocus || focusOptions[0] || null;
   state.activeMapFocusId = nextFocus ? nextFocus.id : null;
   return nextFocus;
@@ -583,26 +619,18 @@ function renderMapFocusList() {
 
 function renderMapEmbed() {
   const iframe = document.getElementById("map-embed");
-  const emptyState = document.getElementById("map-empty-state");
   const activeFocus = ensureActiveMapFocus();
 
-  if (!GOOGLE_MAPS_EMBED_API_KEY) {
+  if (!hasGoogleMapsApiKey()) {
     iframe.hidden = true;
-    emptyState.hidden = false;
     return;
   }
 
   if (!activeFocus) {
     iframe.hidden = true;
-    emptyState.hidden = false;
-    emptyState.innerHTML = `
-      <strong>目前沒有可嵌入的地點</strong>
-      <p>請先補上地址，或切換到有地址的當日任務點。</p>
-    `;
     return;
   }
 
-  emptyState.hidden = true;
   iframe.hidden = false;
   iframe.src = googleMapsEmbedUrl(activeFocus.query);
 }
@@ -614,7 +642,7 @@ function init() {
   renderTabs();
   renderDayPanel();
   renderAttendanceTable();
-  renderLegend();
+  renderMapMissionOverlay();
   renderMapFocusList();
   renderMapEmbed();
 }
