@@ -107,8 +107,8 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 - **新增** `isTrackerEnabled()`：定位追蹤功能在 4/12 00:00 (UTC+8) 前顯示「即將開放」，不顯示 overlay 也不啟動 Firebase
 - **資安** Firebase Database Rules 改為 14 位團員 id 明確 allowlist（`locations/佛祖球球`、`locations/Tina_媽` 等），拒絕任意 node 寫入
 - **調整** 定位追蹤 card 移至任務地圖上方（點擊 chip 後直接看地圖更順手）
-- **新增** 15 分鐘自動 reload：倒數最後 60 秒在 hero stat-board 下方顯示 chip + 「立即重整」按鈕
-- **修正** hero 手機版 RWD：加上 `grid-template-columns: 1fr` 強制單欄，避免右側空白
+- **新增** 15 分鐘自動 reload：hero stat-board 下方常駐倒數 chip（15:00 → 0:00），最後 60 秒變紅提醒 + 「立即重整」按鈕
+- **修正** hero 手機版 RWD：加上 `grid-template-columns: 1fr` 強制單欄，避免右側空白；bump 版本至 v27 確保快取更新
 - **修正** strategy 文字換行：渲染時將 `\n` 轉為 `<br>` 讓排版正確顯示
 - **修正** 去程策略文字移除「深夜趕路」（全團統一行動，無深夜趕路）
 - **修正** `renderAttendanceCell` 未使用的 `member` 參數改為 `_member`

@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Cormorant+Garamond:wght@600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260402-26" />
+    <link rel="stylesheet" href="./styles.css?v=20260402-27" />
   </head>
   <body>
     <div id="member-overlay" class="member-overlay" hidden>
@@ -41,8 +41,8 @@
           </div>
         </div>
         <div class="hero-stat-board" id="strategy-board"></div>
-          <div id="reload-banner" class="stat-chip reload-chip" hidden>
-            <strong>🔄 <span id="reload-countdown-sec">60</span> 秒後自動重新整理</strong>
+          <div id="reload-chip" class="stat-chip reload-chip">
+            <strong>⏱ <span id="reload-countdown">15:00</span> 後自動更新</strong>
             <span>取得最新團員位置與天氣資訊</span>
             <button class="reload-now-btn" onclick="location.reload()">立即重整</button>
           </div>
@@ -142,6 +142,6 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="./app.js?v=20260402-26"></script>
+    <script src="./app.js?v=20260402-27"></script>
   </body>
 </html>
