@@ -315,8 +315,38 @@ const APP_DATA = {
   ]
 };
 
+const DARK_MODE_KEY = "mazu-dark-mode-v1";
+
+function getTodayDayId() {
+  const now = new Date();
+  // 台灣時間 UTC+8
+  const tst = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  const month = tst.getUTCMonth() + 1;
+  const date = tst.getUTCDate();
+  const found = APP_DATA.days.find((d) => {
+    const [m, dd] = d.date.split("/").map(Number);
+    return m === month && dd === date;
+  });
+  return found ? found.id : "day0";
+}
+
+function initDarkMode() {
+  const saved = localStorage.getItem(DARK_MODE_KEY);
+  if (saved === "1") document.documentElement.classList.add("dark");
+
+  const btn = document.getElementById("dark-toggle");
+  if (!btn) return;
+  btn.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
+
+  btn.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem(DARK_MODE_KEY, isDark ? "1" : "0");
+    btn.textContent = isDark ? "☀️" : "🌙";
+  });
+}
+
 const state = {
-  activeDayId: "day0",
+  activeDayId: getTodayDayId(),
   activeMapFocusId: null
 };
 
@@ -1045,6 +1075,7 @@ function initAutoReload() {
 }
 
 function init() {
+  initDarkMode();
   renderStrategyBoard();
   renderDistancePlan();
   renderMarchTable();
