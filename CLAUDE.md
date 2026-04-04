@@ -82,11 +82,6 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 - 字體從 Google Fonts 載入，有改動樣式時注意確認字體有正確套用
 - hero-text 有兩段：第一段說明工具用途，第二段說明 Gino 爸今年角色轉變（不再是補師）
 
-### 2026-04-04
-- **新增** 今日自動切換：`getTodayDayId()` 根據台灣時間（UTC+8）比對 `APP_DATA.days[].date`，初始化時自動跳到當天 tab；進香期外 fallback 到 day0
-- **新增** 黑夜模式：hero `🌙/☀️` 按鈕切換 `html.dark` class，CSS 變數整套覆寫為深色；狀態存 `localStorage`（`mazu-dark-mode-v1`）
-- **修正** 水平 overflow：`html/body/page-shell` 加 `overflow-x: hidden`；`.hero > *` `.content-grid > *` 加 `min-width: 0`
-
 ## 未來功能評估
 
 - 天氣預報（Open-Meteo，免費無需 key）（已新增）
@@ -100,6 +95,11 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 - 每次修改都要更新專案指引（CLAUDE.md），記錄修正、新增了什麼
 
 ## 變更紀錄
+
+### 2026-04-04
+- **新增** 今日自動切換：`getTodayDayId()` 根據台灣時間（UTC+8）比對 `APP_DATA.days[].date`，初始化時自動跳到當天 tab；進香期外 fallback 到 day0
+- **新增** 黑夜模式：hero `🌙/☀️` 按鈕切換 `html.dark` class，CSS 變數整套覆寫為深色；狀態存 `localStorage`（`mazu-dark-mode-v1`）；v31 調高文字對比、各元件加深色覆寫確保可讀性
+- **修正** 水平 overflow：`html/body/page-shell` 加 `overflow-x: hidden`；`.hero > *` `.content-grid > *` 加 `min-width: 0`
 
 ### 2026-04-02（Firebase 即時定位 + 策略修正）
 - **新增** Firebase 即時定位追蹤（`Team Tracker` card）：
