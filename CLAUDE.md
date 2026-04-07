@@ -68,6 +68,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 - Database Rules：`locations/` 下僅允許 14 位團員 id 寫入（明確 allowlist），`.read: true`
   - member id = `memberIdFromName(name)`，空格換底線，例如 `Tina 媽` → `Tina_媽`
   - 若更改成員名單，需同步更新 Firebase Console 的 Database Rules
+- `members/` node：存放動態新增的額外團員 `{ name }` 物件，key 格式 `${memberIdFromName(name)}_${Date.now()}`；`.read: true`，寫入目前不限制（可日後加規則）
 - 定位追蹤在 `2026-04-12T00:00:00+08:00` 前顯示「即將開放」，不啟動 Firebase 連線
 
 ## Google Maps Embed
@@ -99,6 +100,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 ### 2026-04-07
 - **改版** 出席表改為橫向長條圖（Gantt 風格）：每格點擊 toggle（取消拖拉）；header 顯示日期 + 星期；移除舊 `<table>` 與 `renderAttendanceTable`
 - **新增** 走路策略 D0-D8 各行加上日期 + 星期（`dateMeta` 欄位），同步顯示在里程進度條與行軍總表
+- **新增** 出席表底部新增團員功能（方案 B Firebase 同步）：`members` node 即時同步至所有裝置；新增出席狀態存 `localStorage`（`mazu-extra-attendance-v1`，key 為名字）；有 × 移除按鈕；`renderTrackerChips()` 同步顯示額外團員；CSS 新增 `.ac-footer / .ac-add-form / .ac-add-input / .ac-add-submit / .ac-remove-btn`
 
 ### 2026-04-04
 - **新增** 今日自動切換：`getTodayDayId()` 根據台灣時間（UTC+8）比對 `APP_DATA.days[].date`，初始化時自動跳到當天 tab；進香期外 fallback 到 day0

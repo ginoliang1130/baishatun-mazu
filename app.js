@@ -351,6 +351,7 @@ const state = {
 };
 
 const ATTENDANCE_STORAGE_KEY = "mazu-attendance-v1";
+const EXTRA_ATTENDANCE_KEY = "mazu-extra-attendance-v1";
 
 const GEAR_ITEMS = [
   "雨衣／雨褲",
@@ -704,7 +705,22 @@ function renderAttendanceChart() {
   if (!wrap) return;
 
   const attendanceState = getAttendanceState();
+  const extraState = getExtraAttendanceState();
   const cols = APP_DATA.attendanceDays.length;
+
+  const coreRows = APP_DATA.attendance.map((member, mi) => ({
+    name: member.name, isExtra: false, mi,
+    cells: attendanceState[mi]
+  }));
+
+  const extraRows = extraMembers.map((m) => ({
+    name: m.name, isExtra: true, extraId: m.id,
+    cells: APP_DATA.attendanceDays.map((_, di) => ({
+      checked: (extraState[m.name] || [])[di] || false, note: ""
+    }))
+  }));
+
+  const allRows = [...coreRows, ...extraRows];
 
   wrap.innerHTML = `
     <div class="ac-grid" style="--ac-cols:${cols}">
@@ -715,27 +731,66 @@ function renderAttendanceChart() {
           return `<div class="ac-day-label"><span class="ac-date">${date}</span><span class="ac-wd">${wd}</span></div>`;
         }).join("")}
       </div>
-      ${APP_DATA.attendance.map((member, mi) => `
+      ${allRows.map((row) => `
         <div class="ac-row">
-          <div class="ac-name-col">${member.name}</div>
-          ${attendanceState[mi].map((cell, di) => `
-            <div class="ac-cell ${cell.checked ? "on" : "off"}" data-mi="${mi}" data-di="${di}" title="${cell.note || ""}"></div>
+          <div class="ac-name-col">
+            <span>${row.name}</span>
+            ${row.isExtra ? `<button class="ac-remove-btn" data-extra-id="${row.extraId}" data-name="${row.name}" title="移除">×</button>` : ""}
+          </div>
+          ${row.cells.map((cell, di) => `
+            <div class="ac-cell ${cell.checked ? "on" : "off"}"
+              data-is-extra="${row.isExtra}"
+              data-mi="${row.isExtra ? "" : row.mi}"
+              data-name="${row.name}"
+              data-di="${di}"
+              title="${cell.note || ""}"></div>
           `).join("")}
         </div>
       `).join("")}
+    </div>
+    <div class="ac-footer">
+      <div class="ac-add-form">
+        <input class="ac-add-input" id="ac-add-input" type="text" placeholder="輸入新團員名字" maxlength="10" />
+        <button class="ac-add-submit" id="ac-add-submit" ${db ? "" : "disabled title='Firebase 未連線'"}>＋ 新增</button>
+      </div>
     </div>
   `;
 
   wrap.querySelector(".ac-grid").addEventListener("click", (e) => {
     const cell = e.target.closest(".ac-cell");
-    if (!cell) return;
-    const mi = Number(cell.dataset.mi);
-    const di = Number(cell.dataset.di);
-    const state = getAttendanceState();
-    state[mi][di].checked = !state[mi][di].checked;
-    saveAttendanceState(state);
-    cell.className = `ac-cell ${state[mi][di].checked ? "on" : "off"}`;
+    if (cell) {
+      const di = Number(cell.dataset.di);
+      if (cell.dataset.isExtra === "true") {
+        const name = cell.dataset.name;
+        const st = getExtraAttendanceState();
+        if (!st[name]) st[name] = APP_DATA.attendanceDays.map(() => false);
+        st[name][di] = !st[name][di];
+        saveExtraAttendanceState(st);
+        cell.className = `ac-cell ${st[name][di] ? "on" : "off"}`;
+      } else {
+        const mi = Number(cell.dataset.mi);
+        const st = getAttendanceState();
+        st[mi][di].checked = !st[mi][di].checked;
+        saveAttendanceState(st);
+        cell.className = `ac-cell ${st[mi][di].checked ? "on" : "off"}`;
+      }
+      return;
+    }
+    const removeBtn = e.target.closest(".ac-remove-btn");
+    if (removeBtn) removeExtraMember(removeBtn.dataset.extraId, removeBtn.dataset.name);
   });
+
+  const addInput = document.getElementById("ac-add-input");
+  const addSubmit = document.getElementById("ac-add-submit");
+  if (addSubmit && addInput) {
+    addSubmit.addEventListener("click", () => {
+      const name = addInput.value.trim();
+      if (!name) return;
+      addExtraMember(name);
+      addInput.value = "";
+    });
+    addInput.addEventListener("keydown", (e) => { if (e.key === "Enter") addSubmit.click(); });
+  }
 }
 
 
@@ -831,6 +886,7 @@ let db = null;
 let trackerWatchId = null;
 let isSharing = false;
 const teamLocations = {};
+let extraMembers = []; // [{ id, name }] from Firebase
 
 function getMemberIdentity() {
   return localStorage.getItem(MEMBER_IDENTITY_KEY) || null;
@@ -851,9 +907,44 @@ function initFirebase() {
     firebase.initializeApp(config);
     db = firebase.database();
     watchTeamLocations();
+    watchExtraMembers();
   } catch (e) {
     console.warn("Firebase init failed", e);
   }
+}
+
+function getExtraAttendanceState() {
+  try {
+    return JSON.parse(localStorage.getItem(EXTRA_ATTENDANCE_KEY) || "{}");
+  } catch { return {}; }
+}
+
+function saveExtraAttendanceState(st) {
+  localStorage.setItem(EXTRA_ATTENDANCE_KEY, JSON.stringify(st));
+}
+
+function addExtraMember(name) {
+  if (!db || !name.trim()) return;
+  const id = memberIdFromName(name.trim()) + "_" + Date.now();
+  db.ref(`members/${id}`).set({ name: name.trim() });
+}
+
+function removeExtraMember(id, name) {
+  if (!db) return;
+  db.ref(`members/${id}`).remove();
+  const st = getExtraAttendanceState();
+  delete st[name];
+  saveExtraAttendanceState(st);
+}
+
+function watchExtraMembers() {
+  if (!db) return;
+  db.ref("members").on("value", (snap) => {
+    const data = snap.val() || {};
+    extraMembers = Object.entries(data).map(([id, v]) => ({ id, name: v.name }));
+    renderAttendanceChart();
+    renderTrackerChips();
+  });
 }
 
 function writeLocation(name, lat, lng) {
@@ -954,8 +1045,12 @@ function renderTrackerChips() {
   const STALE_MS = 30 * 60 * 1000;
   const now = Date.now();
 
-  wrap.innerHTML = APP_DATA.attendance.map((member) => {
-    const id = memberIdFromName(member.name);
+  const allNames = [
+    ...APP_DATA.attendance.map((m) => m.name),
+    ...extraMembers.map((m) => m.name),
+  ];
+  wrap.innerHTML = allNames.map((name) => {
+    const id = memberIdFromName(name);
     const loc = teamLocations[id] || null;
     const hasLoc = loc && loc.lat && loc.lng;
     const stale = hasLoc && (now - loc.last_updated > STALE_MS);
@@ -964,7 +1059,7 @@ function renderTrackerChips() {
         class="tracker-chip ${hasLoc ? (stale ? "stale" : "online") : "offline"}"
         ${hasLoc ? `data-lat="${loc.lat}" data-lng="${loc.lng}"` : "disabled"}
       >
-        <span class="tracker-chip-name">${member.name}</span>
+        <span class="tracker-chip-name">${name}</span>
         <span class="tracker-chip-time">${hasLoc ? timeSince(loc.last_updated) : "未分享"}</span>
       </button>
     `;
