@@ -26,10 +26,11 @@ jobs:
         env:
           GOOGLE_MAPS_EMBED_API_KEY: ${{ secrets.GOOGLE_MAPS_EMBED_API_KEY }}
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+          CWA_API_KEY: ${{ secrets.CWA_API_KEY }}
         run: |
           mkdir -p dist
           cp index.html styles.css .nojekyll dist/
-          sed "s|__GOOGLE_MAPS_EMBED_API_KEY__|${GOOGLE_MAPS_EMBED_API_KEY}|g" app.js > dist/app.js
+          sed "s|__GOOGLE_MAPS_EMBED_API_KEY__|${GOOGLE_MAPS_EMBED_API_KEY}|g; s|__CWA_API_KEY__|${CWA_API_KEY}|g" app.js > dist/app.js
           python3 << 'PYEOF'
           import os
           config = os.environ['FIREBASE_CONFIG']

@@ -664,7 +664,7 @@ async function fetchDayWeather(dayId, cwaLocation, dateISO) {
   }
 
   try {
-    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-093?Authorization=rdec-key-123-45678-011121314&locationName=${encodeURIComponent(cwaLocation)}&elementName=MinT,MaxT,PoP12h,Wx&format=JSON`;
+    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-093?Authorization=__CWA_API_KEY__&locationName=${encodeURIComponent(cwaLocation)}&elementName=MinT,MaxT,PoP12h,Wx&format=JSON`;
     const res = await fetch(url);
     if (!res.ok) throw new Error();
     const data = await res.json();
