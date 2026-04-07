@@ -843,9 +843,13 @@ html.dark .dark-toggle {
   height: 28px;
   border-radius: 6px;
   cursor: pointer;
-  transition: opacity 100ms ease;
+  transition: opacity 100ms ease, transform 80ms ease;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.ac-cell:active {
+  transform: scale(0.92);
 }
 
 .ac-cell.on {

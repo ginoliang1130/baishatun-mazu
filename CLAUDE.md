@@ -97,7 +97,7 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 ## 變更紀錄
 
 ### 2026-04-07
-- **改版** 出席表改為橫向長條圖（Gantt 風格）：每格點擊 toggle，同列拖拉可批次設定；header 顯示日期 + 星期；移除舊 `<table>` 與 `renderAttendanceTable`
+- **改版** 出席表改為橫向長條圖（Gantt 風格）：每格點擊 toggle（取消拖拉）；header 顯示日期 + 星期；移除舊 `<table>` 與 `renderAttendanceTable`
 - **新增** 走路策略 D0-D8 各行加上日期 + 星期（`dateMeta` 欄位），同步顯示在里程進度條與行軍總表
 
 ### 2026-04-04

@@ -735,11 +735,6 @@ function attendanceDayMeta(label) {
   return { date: `${month}/${date}`, wd: WEEKDAYS[new Date(2026, month - 1, date).getDay()] };
 }
 
-let acDragging = false;
-let acFillValue = false;
-let acDragMember = null;
-let acDragState = null;
-
 function renderAttendanceChart() {
   const wrap = document.getElementById("attendance-chart");
   if (!wrap) return;
@@ -767,60 +762,17 @@ function renderAttendanceChart() {
     </div>
   `;
 
-  const grid = wrap.querySelector(".ac-grid");
-
-  function cellFromPoint(x, y) {
-    return document.elementFromPoint(x, y)?.closest(".ac-cell");
-  }
-
-  function applyCell(cell) {
-    if (!cell || !acDragState) return;
-    const mi = Number(cell.dataset.mi);
-    const di = Number(cell.dataset.di);
-    if (mi !== acDragMember) return;
-    if (acDragState[mi][di].checked === acFillValue) return;
-    acDragState[mi][di].checked = acFillValue;
-    saveAttendanceState(acDragState);
-    cell.className = `ac-cell ${acFillValue ? "on" : "off"}`;
-    cell.dataset.mi = mi;
-    cell.dataset.di = di;
-  }
-
-  grid.addEventListener("mousedown", (e) => {
+  wrap.querySelector(".ac-grid").addEventListener("click", (e) => {
     const cell = e.target.closest(".ac-cell");
     if (!cell) return;
-    acDragging = true;
-    acDragMember = Number(cell.dataset.mi);
-    acDragState = getAttendanceState();
-    acFillValue = !acDragState[acDragMember][Number(cell.dataset.di)].checked;
-    applyCell(cell);
+    const mi = Number(cell.dataset.mi);
+    const di = Number(cell.dataset.di);
+    const state = getAttendanceState();
+    state[mi][di].checked = !state[mi][di].checked;
+    saveAttendanceState(state);
+    cell.className = `ac-cell ${state[mi][di].checked ? "on" : "off"}`;
   });
-
-  grid.addEventListener("mousemove", (e) => {
-    if (!acDragging) return;
-    applyCell(e.target.closest(".ac-cell"));
-  });
-
-  grid.addEventListener("touchstart", (e) => {
-    const t = e.touches[0];
-    const cell = cellFromPoint(t.clientX, t.clientY);
-    if (!cell) return;
-    acDragging = true;
-    acDragMember = Number(cell.dataset.mi);
-    acDragState = getAttendanceState();
-    acFillValue = !acDragState[acDragMember][Number(cell.dataset.di)].checked;
-    applyCell(cell);
-  }, { passive: true });
-
-  grid.addEventListener("touchmove", (e) => {
-    if (!acDragging) return;
-    const t = e.touches[0];
-    applyCell(cellFromPoint(t.clientX, t.clientY));
-  }, { passive: true });
 }
-
-document.addEventListener("mouseup", () => { acDragging = false; acDragMember = null; acDragState = null; });
-document.addEventListener("touchend", () => { acDragging = false; acDragMember = null; acDragState = null; });
 
 
 function getMapFocusOptions() {
