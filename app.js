@@ -66,7 +66,7 @@ const APP_DATA = {
       note: "出發日，為隔天正式推進做準備。",
       strategy: "22:00 提前起步，不理會登轎。明天 09:00 在大甲起跑。",
       coords: [24.493, 120.679],
-      cwaLocation: "大甲區",
+      cwaDataset: "F-D0047-075", cwaLocation: "大甲區",
       lodging: null,
       spots: [
         {
@@ -91,7 +91,7 @@ const APP_DATA = {
       note: "第一晚住宿在梧棲，順手把超商與洗衣點收好。",
       strategy: "09:00 大甲起步，12:00 抵達梧棲。",
       coords: [24.301, 120.518],
-      cwaLocation: "梧棲區",
+      cwaDataset: "F-D0047-075", cwaLocation: "梧棲區",
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -120,7 +120,7 @@ const APP_DATA = {
       note: "第二晚落腳彰化，補給以市區步調為主。",
       strategy: "00:00 準時出發，先過大肚溪橋（彰化瓶頸）。11:30 進駐旅館，下午強制補眠。",
       coords: [24.079, 120.535],
-      cwaLocation: "彰化市",
+      cwaDataset: "F-D0047-017", cwaLocation: "彰化市",
       lodging: {
         name: "華宿行旅",
         address: "彰化縣彰化市南瑤路411號",
@@ -154,7 +154,7 @@ const APP_DATA = {
       note: "這一晚是進北港前的最後中繼站，可洗澡小休，僅一間房。01:00 過西螺大橋，12:30 前抵達。",
       strategy: "當晚 19:00 必須熄燈。23:30 從虎尾起步，經土庫、元長深夜推進，深夜路段昏暗務必配戴強光燈具。",
       coords: [23.711, 120.430],
-      cwaLocation: "虎尾鎮",
+      cwaDataset: "F-D0047-027", cwaLocation: "虎尾鎮",
       lodging: {
         name: "阿利亞民宿",
         address: "雲林縣虎尾鎮立新街165號",
@@ -183,7 +183,7 @@ const APP_DATA = {
       note: "住宿暫定在大維哥家或嘉義市，先把北港補給點記住。",
       strategy: "終點是北港朝天宮，北辰派出所只是媽祖入廟前的最後休息點。\n\n⚠️ 45 萬人潮分流：\n・守候北辰組：在北辰等媽祖，之後提早撤退至住宿點。\n・衝刺朝天宮組：清晨 5 點直接前往卡位。\n\n嚴禁猜測媽祖路線，神轎可能在土庫或元長繞很久，你們不要等。",
       coords: [23.571, 120.304],
-      cwaLocation: "北港鎮",
+      cwaDataset: "F-D0047-027", cwaLocation: "北港鎮",
       lodging: {
         name: "大維哥家 or 嘉義市",
         address: "",
@@ -211,7 +211,7 @@ const APP_DATA = {
       focus: "半夜自北港出發",
       note: "回程住宿改住烏日高鐵附近，方便調整節奏。",
       coords: [24.002, 120.612],
-      cwaLocation: "烏日區",
+      cwaDataset: "F-D0047-075", cwaLocation: "烏日區",
       lodging: {
         name: "赫絲珀HSR高鐵行旅",
         address: "台中市烏日區新興路255號",
@@ -234,7 +234,7 @@ const APP_DATA = {
       focus: "回程補給",
       note: "回程再次住寄居蟹，補洗補休一次完成。",
       coords: [24.301, 120.518],
-      cwaLocation: "梧棲區",
+      cwaDataset: "F-D0047-075", cwaLocation: "梧棲區",
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -262,7 +262,7 @@ const APP_DATA = {
       focus: "最後整補",
       note: "住宿在阿瓜家，7-11 收件資訊也一併保留。",
       coords: [24.440, 120.667],
-      cwaLocation: "苑裡鎮",
+      cwaDataset: "F-D0047-015", cwaLocation: "苑裡鎮",
       lodging: {
         name: "阿瓜家",
         address: "",
@@ -286,7 +286,7 @@ const APP_DATA = {
       focus: "任務收尾",
       note: "回宮日，住宿預計回家或續住阿瓜家。",
       coords: [24.493, 120.679],
-      cwaLocation: "大甲區",
+      cwaDataset: "F-D0047-075", cwaLocation: "大甲區",
       lodging: {
         name: "溫暖的家 or 阿瓜家",
         address: "",
@@ -356,7 +356,7 @@ function initDarkMode() {
 
 const state = {
   activeDayId: getTodayDayId(),
-  activeMapFocusId: null
+  activeMapFocusId: "gongtian"
 };
 
 const ATTENDANCE_STORAGE_KEY = "mazu-attendance-v1";
@@ -590,7 +590,7 @@ function renderDayPanel() {
   if (day.cwaLocation) {
     const [month, d] = day.date.split("/");
     const dateISO = `2026-${month.padStart(2, "0")}-${d.padStart(2, "0")}`;
-    fetchDayWeather(day.id, day.cwaLocation, dateISO);
+    fetchDayWeather(day.id, day.cwaDataset, day.cwaLocation, dateISO);
   }
 }
 
@@ -654,7 +654,7 @@ function weatherDescToEmoji(desc) {
   return "🌤️";
 }
 
-async function fetchDayWeather(dayId, cwaLocation, dateISO) {
+async function fetchDayWeather(dayId, cwaDataset, cwaLocation, dateISO) {
   const widget = document.getElementById("weather-widget");
   if (!widget) return;
 
@@ -664,29 +664,37 @@ async function fetchDayWeather(dayId, cwaLocation, dateISO) {
   }
 
   try {
-    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-093?Authorization=__CWA_API_KEY__&locationName=${encodeURIComponent(cwaLocation)}&elementName=MinT,MaxT,PoP12h,Wx&format=JSON`;
+    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/${cwaDataset}?Authorization=__CWA_API_KEY__&locationName=${encodeURIComponent(cwaLocation)}&elementName=MinT,MaxT,PoP12h,Wx&format=JSON`;
     const res = await fetch(url);
     if (!res.ok) throw new Error();
     const data = await res.json();
     if (data.success !== "true") throw new Error();
 
-    const locsArr = data.records?.Locations?.[0]?.Location ?? [];
-    const loc = locsArr.find((l) => l.LocationName === cwaLocation);
+    // F-D0047-091 county-level: records.Locations[0].Location[]
+    const locsArr = data.records?.Locations?.[0]?.Location
+      ?? data.records?.location
+      ?? [];
+    const loc = locsArr.find((l) => (l.LocationName ?? l.locationName) === cwaLocation);
     if (!loc) throw new Error();
 
     function findEl(name) {
-      return (loc.WeatherElement || []).find((e) => e.ElementName === name);
+      return (loc.WeatherElement ?? loc.weatherElement ?? [])
+        .find((e) => (e.ElementName ?? e.elementName) === name);
     }
-    function firstValueOnDate(el, valueKey) {
+    function firstValueOnDate(el, ...valueKeys) {
       if (!el) return null;
-      const t = (el.Time || []).find((t) => t.StartTime?.slice(0, 10) === dateISO);
-      return t?.ElementValue?.[0]?.[valueKey] ?? null;
+      const times = el.Time ?? el.time ?? [];
+      const t = times.find((t) => (t.StartTime ?? t.startTime)?.slice(0, 10) === dateISO);
+      if (!t) return null;
+      const ev = t.ElementValue?.[0] ?? t.elementValue?.[0] ?? {};
+      for (const k of valueKeys) { if (ev[k] != null) return ev[k]; }
+      return null;
     }
 
-    const minTemp = firstValueOnDate(findEl("MinT"), "Temperature");
-    const maxTemp = firstValueOnDate(findEl("MaxT"), "Temperature");
-    const precipProb = firstValueOnDate(findEl("PoP12h"), "ProbabilityOfPrecipitation");
-    const wxDesc = firstValueOnDate(findEl("Wx"), "Weather");
+    const minTemp = firstValueOnDate(findEl("MinT"), "Temperature", "value");
+    const maxTemp = firstValueOnDate(findEl("MaxT"), "Temperature", "value");
+    const precipProb = firstValueOnDate(findEl("PoP12h"), "ProbabilityOfPrecipitation", "value");
+    const wxDesc = firstValueOnDate(findEl("Wx"), "Weather", "value");
 
     if (minTemp == null || maxTemp == null) throw new Error();
 
