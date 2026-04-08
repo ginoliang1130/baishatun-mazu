@@ -664,37 +664,39 @@ async function fetchDayWeather(dayId, cwaDataset, cwaLocation, dateISO) {
   }
 
   try {
-    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/${cwaDataset}?Authorization=__CWA_API_KEY__&locationName=${encodeURIComponent(cwaLocation)}&elementName=MinT,MaxT,PoP12h,Wx&format=JSON`;
+    const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/${cwaDataset}?Authorization=__CWA_API_KEY__&locationName=${encodeURIComponent(cwaLocation)}&elementName=%E6%9C%80%E9%AB%98%E6%BA%AB%E5%BA%A6,%E6%9C%80%E4%BD%8E%E6%BA%AB%E5%BA%A6,12%E5%B0%8F%E6%99%82%E9%99%8D%E9%9B%A8%E6%A9%9F%E7%8E%87,%E5%A4%A9%E6%B0%A3%E7%8F%BE%E8%B1%A1&format=JSON`;
     const res = await fetch(url);
     if (!res.ok) throw new Error();
     const data = await res.json();
     if (data.success !== "true") throw new Error();
 
-    // F-D0047-091 county-level: records.Locations[0].Location[]
-    const locsArr = data.records?.Locations?.[0]?.Location
-      ?? data.records?.location
-      ?? [];
-    const loc = locsArr.find((l) => (l.LocationName ?? l.locationName) === cwaLocation);
+    const locsArr = data.records?.Locations?.[0]?.Location ?? [];
+    const loc = locsArr.find((l) => l.LocationName === cwaLocation);
     if (!loc) throw new Error();
 
     function findEl(name) {
-      return (loc.WeatherElement ?? loc.weatherElement ?? [])
-        .find((e) => (e.ElementName ?? e.elementName) === name);
+      return (loc.WeatherElement ?? []).find((e) => e.ElementName === name);
     }
-    function firstValueOnDate(el, ...valueKeys) {
-      if (!el) return null;
-      const times = el.Time ?? el.time ?? [];
-      const t = times.find((t) => (t.StartTime ?? t.startTime)?.slice(0, 10) === dateISO);
-      if (!t) return null;
-      const ev = t.ElementValue?.[0] ?? t.elementValue?.[0] ?? {};
-      for (const k of valueKeys) { if (ev[k] != null) return ev[k]; }
-      return null;
+    // 找當天所有時段，對溫度取 min/max，降雨取最大，天氣取第一筆
+    function valuesOnDate(el, key) {
+      if (!el) return [];
+      return (el.Time ?? [])
+        .filter((t) => t.StartTime?.slice(0, 10) === dateISO)
+        .map((t) => t.ElementValue?.[0]?.[key])
+        .filter((v) => v != null);
     }
 
-    const minTemp = firstValueOnDate(findEl("MinT"), "Temperature", "value");
-    const maxTemp = firstValueOnDate(findEl("MaxT"), "Temperature", "value");
-    const precipProb = firstValueOnDate(findEl("PoP12h"), "ProbabilityOfPrecipitation", "value");
-    const wxDesc = firstValueOnDate(findEl("Wx"), "Weather", "value");
+    const minTemps = valuesOnDate(findEl("最低溫度"), "MinTemperature");
+    const maxTemps = valuesOnDate(findEl("最高溫度"), "MaxTemperature");
+    const pops     = valuesOnDate(findEl("12小時降雨機率"), "ProbabilityOfPrecipitation");
+    const wxs      = valuesOnDate(findEl("天氣現象"), "Weather");
+
+    if (!minTemps.length || !maxTemps.length) throw new Error();
+
+    const minTemp   = Math.min(...minTemps.map(Number));
+    const maxTemp   = Math.max(...maxTemps.map(Number));
+    const precipProb = pops.length ? Math.max(...pops.map(Number)) : null;
+    const wxDesc    = wxs[0] ?? "";
 
     if (minTemp == null || maxTemp == null) throw new Error();
 
