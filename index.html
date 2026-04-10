@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Cormorant+Garamond:wght@600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260410-40" />
+    <link rel="stylesheet" href="./styles.css?v=20260410-44" />
   </head>
   <body>
     <div id="member-overlay" class="member-overlay" hidden>
@@ -121,7 +121,7 @@
             </div>
             <p class="section-note">官方衛星定位系統，進香啟程後即時追蹤神轎位置。</p>
           </div>
-          <div class="gps-frame-wrap">
+          <div class="gps-frame-wrap gps-desktop-only">
             <iframe
               src="https://baishatun.godmaps.tw/gps.html"
               title="白沙屯媽祖即時 GPS"
@@ -129,6 +129,9 @@
               allowfullscreen
             ></iframe>
           </div>
+          <a class="gps-mobile-link gps-mobile-only" href="https://baishatun.godmaps.tw/gps.html" target="_blank" rel="noopener">
+            📍 開啟媽祖即時 GPS
+          </a>
         </section>
 
         <section class="card gear-card">
@@ -160,6 +163,6 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="./app.js?v=20260410-40"></script>
+    <script src="./app.js?v=20260410-44"></script>
   </body>
 </html>

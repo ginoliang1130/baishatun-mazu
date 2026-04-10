@@ -382,6 +382,28 @@ html.dark .dark-toggle {
   border: 1px solid rgba(88, 57, 39, 0.16);
   display: block;
 }
+.gps-desktop-only { display: block; }
+.gps-mobile-only  { display: none; }
+.gps-mobile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+}
+.gps-mobile-link:hover { background: var(--accent-strong); }
+
+@media (max-width: 899px) {
+  .gps-desktop-only { display: none; }
+  .gps-mobile-only  { display: flex; }
+}
 
 #map-embed {
   background: #f3e8d2;
