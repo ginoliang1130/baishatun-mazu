@@ -97,6 +97,20 @@ app.js       — 所有邏輯與資料（APP_DATA、render 函式、state）
 
 ## 變更紀錄
 
+### 2026-04-12
+- **新增** Day 0 加入 4 個步行休息點：通苑慈雲寺（14K）、大甲鎮瀾宮（28.5K）、無極鎮安宮（36.5K）、梧棲寄居蟹（42.5K）
+- **新增** Day 0 `walkingRoute` 欄位：拱天宮 → 慈雲寺 → 鎮瀾宮 → 鎮安宮 → 寄居蟹，地圖焦點顯示 Google Maps Directions 步行路線
+- **新增** `googleMapsDirectionsUrl(origin, waypoints, destination)`：有 API Key 時用 Embed directions API，無則 fallback 到 saddr/daddr
+- **新增** `getMapFocusOptions()` 支援 `walkingRoute`，自動插入「步行路線」焦點（`directionsUrl`）至 dayFocuses 首位
+- **修正** `renderMapEmbed()` 支援 `directionsUrl`（`activeFocus.directionsUrl ?? googleMapsEmbedUrl(...)`）
+
+### 2026-04-10
+- **修正** 天氣 API 換成正確鄉鎮層級 dataset（F-D0047-015/017/027/075），`cwaLocation` 改回鄉鎮名稱
+- **修正** 地圖預設起點改為拱天宮（`state.activeMapFocusId = "gongtian"`）
+- **修正** CWA 天氣解析改用中文 ElementName（最高溫度/最低溫度/12小時降雨機率/天氣現象）與正確 value key
+- **修正** 降雨機率過濾非數字值（`"-"` → `NaN` 問題）
+- CWA API Key 改用正式授權碼（GitHub Secret `CWA_API_KEY`，CI 注入）
+
 ### 2026-04-07
 - **改版** 出席表改為橫向長條圖（Gantt 風格）：每格點擊 toggle（取消拖拉）；header 顯示日期 + 星期；移除舊 `<table>` 與 `renderAttendanceTable`
 - **新增** 走路策略 D0-D8 各行加上日期 + 星期（`dateMeta` 欄位），同步顯示在里程進度條與行軍總表
