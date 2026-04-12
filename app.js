@@ -108,6 +108,12 @@ const APP_DATA = {
       strategy: "09:00 大甲起步，12:00 抵達梧棲。",
       coords: [24.301, 120.518],
       cwaDataset: "F-D0047-075", cwaLocation: "梧棲區",
+      walkingRoute: {
+        label: "Day 1 步行路線（大甲 → 梧棲）",
+        origin: "台中市大甲區順天路5號",
+        waypoints: [],
+        destination: "台中市梧棲區港埠路二段431巷22號"
+      },
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -137,6 +143,12 @@ const APP_DATA = {
       strategy: "00:00 準時出發，先過大肚溪橋（彰化瓶頸）。11:30 進駐旅館，下午強制補眠。",
       coords: [24.079, 120.535],
       cwaDataset: "F-D0047-017", cwaLocation: "彰化市",
+      walkingRoute: {
+        label: "Day 2 步行路線（梧棲 → 彰化）",
+        origin: "台中市梧棲區港埠路二段431巷22號",
+        waypoints: ["彰化縣伸港鄉大肚溪橋"],
+        destination: "彰化縣彰化市南瑤路411號"
+      },
       lodging: {
         name: "華宿行旅",
         address: "彰化縣彰化市南瑤路411號",
@@ -171,6 +183,12 @@ const APP_DATA = {
       strategy: "當晚 19:00 必須熄燈。23:30 從虎尾起步，經土庫、元長深夜推進，深夜路段昏暗務必配戴強光燈具。",
       coords: [23.711, 120.430],
       cwaDataset: "F-D0047-027", cwaLocation: "虎尾鎮",
+      walkingRoute: {
+        label: "Day 3 步行路線（彰化 → 虎尾）",
+        origin: "彰化縣彰化市南瑤路411號",
+        waypoints: ["彰化縣溪州鄉西螺大橋"],
+        destination: "雲林縣虎尾鎮立新街165號"
+      },
       lodging: {
         name: "阿利亞民宿",
         address: "雲林縣虎尾鎮立新街165號",
@@ -200,6 +218,12 @@ const APP_DATA = {
       strategy: "終點是北港朝天宮，北辰派出所只是媽祖入廟前的最後休息點。\n\n⚠️ 45 萬人潮分流：\n・守候北辰組：在北辰等媽祖，之後提早撤退至住宿點。\n・衝刺朝天宮組：清晨 5 點直接前往卡位。\n\n嚴禁猜測媽祖路線，神轎可能在土庫或元長繞很久，你們不要等。",
       coords: [23.571, 120.304],
       cwaDataset: "F-D0047-027", cwaLocation: "北港鎮",
+      walkingRoute: {
+        label: "Day 4 步行路線（虎尾 → 北港）",
+        origin: "雲林縣虎尾鎮立新街165號",
+        waypoints: ["雲林縣北港鎮北辰路1號北辰派出所"],
+        destination: "雲林縣北港鎮媽祖路178號朝天宮"
+      },
       lodging: {
         name: "大維哥家 or 嘉義市",
         address: "",
@@ -228,6 +252,12 @@ const APP_DATA = {
       note: "回程住宿改住烏日高鐵附近，方便調整節奏。",
       coords: [24.002, 120.612],
       cwaDataset: "F-D0047-075", cwaLocation: "烏日區",
+      walkingRoute: {
+        label: "Day 5 步行路線（北港 → 烏日，回程）",
+        origin: "雲林縣北港鎮媽祖路178號朝天宮",
+        waypoints: ["彰化縣溪州鄉西螺大橋"],
+        destination: "台中市烏日區新興路255號"
+      },
       lodging: {
         name: "赫絲珀HSR高鐵行旅",
         address: "台中市烏日區新興路255號",
@@ -251,6 +281,12 @@ const APP_DATA = {
       note: "回程再次住寄居蟹，補洗補休一次完成。",
       coords: [24.301, 120.518],
       cwaDataset: "F-D0047-075", cwaLocation: "梧棲區",
+      walkingRoute: {
+        label: "Day 6 步行路線（烏日 → 梧棲，回程）",
+        origin: "台中市烏日區新興路255號",
+        waypoints: [],
+        destination: "台中市梧棲區港埠路二段431巷22號"
+      },
       lodging: {
         name: "梧棲寄居蟹",
         address: "台中市梧棲區港埠路二段431巷22號",
@@ -279,6 +315,12 @@ const APP_DATA = {
       note: "住宿在阿瓜家，7-11 收件資訊也一併保留。",
       coords: [24.440, 120.667],
       cwaDataset: "F-D0047-015", cwaLocation: "苑裡鎮",
+      walkingRoute: {
+        label: "Day 7 步行路線（梧棲 → 苑裡，回程）",
+        origin: "台中市梧棲區港埠路二段431巷22號",
+        waypoints: [],
+        destination: "苗栗縣苑裡鎮苑裡鎮"
+      },
       lodging: {
         name: "阿瓜家",
         address: "",
@@ -303,6 +345,12 @@ const APP_DATA = {
       note: "回宮日，住宿預計回家或續住阿瓜家。",
       coords: [24.493, 120.679],
       cwaDataset: "F-D0047-075", cwaLocation: "大甲區",
+      walkingRoute: {
+        label: "Day 8 步行路線（苑裡 → 拱天宮，回宮）",
+        origin: "苗栗縣苑裡鎮苑裡鎮",
+        waypoints: ["苗栗縣通霄鎮通霄鎮"],
+        destination: "苗栗縣通霄鎮白東里8號拱天宮"
+      },
       lodging: {
         name: "溫暖的家 or 阿瓜家",
         address: "",
@@ -412,10 +460,12 @@ function googleMapsEmbedUrl(query) {
 
 function googleMapsDirectionsUrl(origin, waypoints, destination) {
   if (hasGoogleMapsApiKey()) {
-    const wp = waypoints.join("|");
-    return `https://www.google.com/maps/embed/v1/directions?key=${encodeURIComponent(GOOGLE_MAPS_EMBED_API_KEY)}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&waypoints=${encodeURIComponent(wp)}&mode=walking&language=zh-TW`;
+    const base = `https://www.google.com/maps/embed/v1/directions?key=${encodeURIComponent(GOOGLE_MAPS_EMBED_API_KEY)}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=walking&language=zh-TW`;
+    return waypoints.length
+      ? base + `&waypoints=${encodeURIComponent(waypoints.join("|"))}`
+      : base;
   }
-  return `https://maps.google.com/maps?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}&output=embed`;
+  return `https://maps.google.com/maps?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}&dirflg=w&output=embed`;
 }
 
 function hasGoogleMapsApiKey() {
